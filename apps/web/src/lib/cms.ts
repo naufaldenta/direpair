@@ -3,6 +3,11 @@ import { fixtureDataset } from '../data/fixtures';
 import type { CmsContent, CmsDataset, SiteSettings } from './cms-types';
 
 const imageSchema = z.object({ id: z.number(), url: z.string(), width: z.number(), height: z.number(), alt: z.string() });
+const termSchema = z.object({ id: z.number(), slug: z.string(), name: z.string() });
+const termsSchema = z.preprocess(
+  (value) => Array.isArray(value) && value.length === 0 ? {} : value,
+  z.record(z.string(), z.array(termSchema)),
+);
 const contentSchema = z.object({
   id: z.number(),
   uuid: z.string(),
@@ -13,7 +18,10 @@ const contentSchema = z.object({
   content: z.string(),
   featured_image: imageSchema.nullable(),
   meta: z.record(z.string(), z.unknown()),
-  terms: z.record(z.string(), z.array(z.object({ id: z.number(), slug: z.string(), name: z.string() }))),
+  // Older Direpair CMS releases encoded an empty PHP array as JSON `[]` for
+  // content types without taxonomies (for example FAQ). Normalize only that
+  // known empty shape while continuing to reject malformed non-empty arrays.
+  terms: termsSchema,
   published_at: z.string(),
   modified_at: z.string(),
 });

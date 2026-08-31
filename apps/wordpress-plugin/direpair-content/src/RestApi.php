@@ -224,7 +224,9 @@ final class RestApi
             'content' => wp_kses_post(apply_filters('the_content', $post->post_content)),
             'featured_image' => self::featuredImage($post->ID),
             'meta' => $meta,
-            'terms' => $terms,
+            // Preserve a stable object/map JSON contract even when this post
+            // type has no taxonomies. A plain empty PHP array becomes `[]`.
+            'terms' => (object) $terms,
             'published_at' => get_post_time(DATE_ATOM, true, $post),
             'modified_at' => get_post_modified_time(DATE_ATOM, true, $post),
         ];

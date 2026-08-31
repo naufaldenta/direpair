@@ -360,7 +360,7 @@ php artisan optimize
 ## 11. Checklist selesai
 
 - [ ] CMS dan API memakai HTTPS valid.
-- [ ] Plugin Direpair Content 0.2.0 atau lebih baru aktif.
+- [ ] Plugin Direpair Content 0.2.1 atau lebih baru aktif.
 - [ ] Konten asli terverifikasi dan data demo tidak dipublikasikan.
 - [ ] Build Vercel pertama berhasil dan hostname gratisnya dicatat.
 - [ ] Laravel `.env` memakai hostname Vercel yang benar.

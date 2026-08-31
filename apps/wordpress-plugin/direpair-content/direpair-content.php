@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Direpair Content
  * Description: Structured public content and REST API for the Direpair Astro frontend.
- * Version: 0.2.0
+ * Version: 0.2.1
  * Requires at least: 6.6
  * Requires PHP: 8.2
  * Author: Direpair
@@ -15,7 +15,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-define('DIREPAIR_CONTENT_VERSION', '0.2.0');
+define('DIREPAIR_CONTENT_VERSION', '0.2.1');
 define('DIREPAIR_CONTENT_FILE', __FILE__);
 define('DIREPAIR_CONTENT_DIR', plugin_dir_path(__FILE__));
 
