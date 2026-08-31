@@ -1,0 +1,11 @@
+---
+export const prerender = true;
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCmsDataset, metaString } from '../../lib/cms';
+const { problems } = await getCmsDataset();
+---
+<BaseLayout title="Panduan Masalah Elektronik | Direpair" description="Panduan awal gejala TWS, vacuum, sepeda listrik, dan perangkat elektronik sebelum diagnosis teknisi.">
+  <section class="page-hero"><div class="container"><span class="route-code">PROBLEM / GUIDE</span><h1>Mulai dari yang perangkatmu lakukan—atau tidak lakukan.</h1><p class="lede">Langkah aman, kemungkinan penyebab, dan kapan unit perlu dihentikan. Panduan ini tidak menggantikan diagnosis teknis.</p></div></section>
+  <section class="section"><div class="container problem-grid">{problems.map((problem,index) => <a class="problem-card card" href={`/masalah/${problem.slug}/`}><span>{String(index+1).padStart(2,'0')}</span><h2>{problem.title}</h2><p>{metaString(problem,'quick_answer',problem.excerpt)}</p><strong>Baca panduan</strong></a>)}</div></section>
+</BaseLayout>
+<style>.page-hero{padding:86px 0 45px}.page-hero h1{max-width:950px}.page-hero .lede{margin-top:22px}.problem-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}.problem-card{position:relative;padding:32px;min-height:310px;display:flex;align-items:flex-start;flex-direction:column}.problem-card>span{color:var(--route-red);font-family:var(--font-mono);font-size:.7rem;font-weight:700}.problem-card h2{font-size:clamp(1.7rem,3vw,2.5rem);margin:40px 0 14px}.problem-card p{color:var(--muted)}.problem-card strong{margin-top:auto;color:var(--route-green);font-size:.87rem}.problem-card:hover{background:var(--warm);transform:translateY(-3px)}@media(max-width:720px){.problem-grid{grid-template-columns:1fr}}</style>

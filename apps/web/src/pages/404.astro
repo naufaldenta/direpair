@@ -1,0 +1,8 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Halaman Tidak Ditemukan | Direpair" description="Halaman yang kamu cari tidak tersedia." noindex>
+  <section class="not-found"><div class="narrow"><span class="route-code">ROUTE / 404</span><h1>Halaman ini tidak ditemukan.</h1><p class="lede">Kembali ke layanan, mulai cek kerusakan, atau buka status repair dari tautan privatmu.</p><div class="button-row"><a class="button" href="/">Kembali ke beranda</a><a class="button secondary" href="/cek-status/">Cek status</a></div></div></section>
+</BaseLayout>
+<style>.not-found{min-height:65vh;display:grid;place-items:center;padding:90px 0}.not-found .lede{margin:22px 0 28px}</style>

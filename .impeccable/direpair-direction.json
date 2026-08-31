@@ -1,0 +1,125 @@
+{
+  "title": "Pilih dunia visual baru Direpair",
+  "question": "Saya sudah menyaring arah yang mampu hidup konsisten di website publik, dashboard operasi, dan CMS. Pilih satu untuk saya bangun menyeluruh, atau gunakan re-roll bila belum ada yang tepat.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Diagnostic Bay",
+      "kicker": "THE ROLL",
+      "lineage": "workshop tool shadow-board dan service tag",
+      "thesis": "Direpair menjadi bengkel diagnosis bernomor: setiap layanan, keputusan, dan status punya bay yang jelas.",
+      "palette": ["#143642", "#F2EDE1", "#C64B32", "#D6B74B", "#87939A"],
+      "materials": ["powder-coated steel", "chalk outlines", "stamped repair tags", "nickel rails"],
+      "viewport": "Layar pertama berupa satu diagnostic bay lebar; copy dan CTA menyatu dengan tag intake, sementara alur diagnosis-ke-repair terbaca sebagai rail bernomor.",
+      "risk": "Dapat terasa terlalu industrial bila ritme ruang dan copy manusianya tidak dijaga.",
+      "raised": [
+        {"from": "challenger-event", "raise": "Jalur status ikut menunjukkan sebab-akibat diagnosis, bukan sekadar langkah dekoratif."},
+        {"from": "challenger-jackfield", "raise": "Setiap status memperoleh posisi, label, dan koneksi yang stabil untuk re-entry pengguna."}
+      ],
+      "comp": ".impeccable/mocks/decision/direpair-diagnostic-bay.png"
+    },
+    {
+      "id": "model-pick",
+      "label": "Service Line Atlas",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Jakarta transit wayfinding dan route diagrams",
+      "thesis": "Perjalanan repair dibaca seperti rute layanan kota: cepat dipahami, lokal, dan selalu memperlihatkan posisi berikutnya.",
+      "palette": ["#102A43", "#F7F4EA", "#D8432F", "#F0C44D", "#3B7C72"],
+      "materials": ["enamel signage", "route strips", "station codes", "paper tickets"],
+      "viewport": "Headline berdiri di sisi peta servis besar; jalur bercabang dari jenis perangkat menuju diagnosis, quotation, repair, dan selesai.",
+      "risk": "Wayfinding adalah metafora yang familier dan bisa terasa seperti portal transportasi bila artefak repair kurang kuat.",
+      "comp": ".impeccable/mocks/decision/direpair-service-line-atlas.png"
+    },
+    {
+      "id": "challenger-cabinet",
+      "label": "Reverse Cabinet",
+      "verdict": "competitive",
+      "lineage": "chaekgeori cabinet dengan reverse perspective",
+      "thesis": "Layanan dan pengetahuan repair hidup sebagai kabinet terbuka yang dapat dijelajahi dari beberapa arah.",
+      "palette": ["#252A34", "#EEE6D2", "#9A3F34", "#315B52", "#C59A45"],
+      "materials": ["inked wood", "archival paper", "labeled drawers", "brass tabs"],
+      "viewport": "Satu kabinet asimetris memenuhi layar; drawer layanan, masalah, dan status membentuk navigasi tanpa grid kartu biasa.",
+      "case": "Sangat memorable dan bagus untuk inventory konten, tetapi kalah tipis pada kejelasan bahwa ini layanan repair.",
+      "risk": "Reverse perspective mudah menjadi ilustratif berlebihan dan memperlambat scanning tugas.",
+      "comp": ".impeccable/mocks/decision/direpair-reverse-cabinet.png"
+    },
+    {
+      "id": "challenger-event",
+      "label": "Event Reconstruction",
+      "verdict": "competitive",
+      "lineage": "particle-detector event displays",
+      "thesis": "Diagnosis divisualkan sebagai rekonstruksi bukti: gejala masuk, kemungkinan penyebab terbentuk, keputusan repair menjadi jelas.",
+      "palette": ["#111820", "#EDF0E8", "#E04A32", "#E4C54E", "#73A6A2"],
+      "materials": ["measurement plots", "registration marks", "trace lines", "lab labels"],
+      "viewport": "Sebuah field diagnosis besar menghubungkan tiga gejala ke perangkat dan hasil, dengan copy pendek tertanam pada sumbu ukur.",
+      "case": "Memberi Direpair bahasa diagnosis paling khas dan kausal, namun identifikasi audiensnya tidak secepat arah workshop.",
+      "risk": "Bisa terasa saintifik dan dingin, serta membutuhkan disiplin performa untuk motion garis.",
+      "comp": ".impeccable/mocks/decision/direpair-event-reconstruction.png"
+    },
+    {
+      "id": "challenger-jackfield",
+      "label": "Normalling Schedule",
+      "verdict": "competitive",
+      "lineage": "broadcast jackfield dan maintenance schedules",
+      "thesis": "Setiap request adalah sinyal yang menempuh jalur pasti melalui diagnosis, persetujuan, pembayaran, dan repair.",
+      "palette": ["#24282B", "#EDE8DC", "#B54831", "#C9A83F", "#788B7A"],
+      "materials": ["patch cords", "engraved labels", "maintenance tape", "status lamps"],
+      "viewport": "Grid jackfield besar menjadi hero dan navigator; satu jalur aktif menghubungkan input perangkat ke hasil layanan.",
+      "case": "State grammar dan re-entry paling kuat untuk dashboard operasi, tetapi terasa paling teknis bagi pelanggan umum.",
+      "risk": "Metafora koneksi dapat membingungkan bila label dan urutan tidak sangat eksplisit.",
+      "comp": ".impeccable/mocks/decision/direpair-normalling-schedule.png"
+    },
+    {
+      "id": "declined-rain",
+      "label": "Rain-Night Service",
+      "verdict": "declined",
+      "lineage": "rain caustics dan night cityscape",
+      "thesis": "Bengkel malam dengan cahaya berlapis sebagai atmosfer utama.",
+      "palette": ["#0C1520", "#4D7694", "#D85235", "#E8DEC9"],
+      "materials": ["wet glass", "banded light", "street reflections"],
+      "viewport": "Hero gelap sinematik dengan cahaya servis sebagai penunjuk arah.",
+      "case": "Gagal membedakan Direpair dari kategori dark-neon repair lab.",
+      "risk": "Kontras dan keterbacaan mudah kalah oleh atmosfer.",
+      "kept": "Ritme navigasi berlapis yang terasa seperti pita cahaya, tanpa material neon malam."
+    },
+    {
+      "id": "declined-cloud",
+      "label": "Iridescent Edge",
+      "verdict": "declined",
+      "lineage": "iridescent cloud edges",
+      "thesis": "Status muncul sebagai spektrum tipis di tepi bidang netral.",
+      "palette": ["#F3F0E8", "#242A30", "#78A6A0", "#D77A52"],
+      "materials": ["mist", "spectral edge", "matte paper"],
+      "viewport": "Bidang editorial tenang dengan cahaya status di tepinya.",
+      "case": "Terlalu ethereal dan tidak mengidentifikasi repair dengan cepat.",
+      "risk": "Mudah bergeser ke visual SaaS generik.",
+      "kept": "Warna hanya dipakai pada edge status, bukan memenuhi seluruh permukaan."
+    },
+    {
+      "id": "declined-raygun",
+      "label": "Raygun Desk",
+      "verdict": "declined",
+      "lineage": "Ray Gun magazine desk layouts",
+      "thesis": "Layout menabrak grid untuk membangun energi editorial yang liar.",
+      "palette": ["#EDE7D8", "#181818", "#D84831", "#BDA24A"],
+      "materials": ["photocopy", "cropped type", "registration errors"],
+      "viewport": "Headline dan jalur booking sengaja memotong grid.",
+      "case": "Energinya mengorbankan comprehension dan aksesibilitas pada funnel layanan.",
+      "risk": "Tugas penting menjadi sulit discan.",
+      "kept": "Satu deliberate grid break di marketing, tidak dibawa ke form atau operations."
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "comp", "toggle": true},
+  "canon": true,
+  "canonCard": {
+    "label": "Category Standard",
+    "thesis": "Website repair modern yang familier, dieksekusi rapi dengan fokus pada trust, layanan, dan booking.",
+    "palette": ["#FFFFFF", "#172033", "#2864DC", "#EEF2F6"],
+    "materials": ["clean grid", "service photography", "rounded panels", "simple icons"],
+    "viewport": "Navbar, split hero, foto teknisi, satu CTA utama, dan kartu layanan di bawah fold.",
+    "risk": "Mudah dipahami tetapi sengaja sulit dibedakan dari kompetitor.",
+    "comp": ".impeccable/mocks/decision/direpair-canon.png"
+  },
+  "steer": true
+}

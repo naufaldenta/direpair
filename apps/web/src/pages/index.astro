@@ -1,0 +1,114 @@
+---
+export const prerender = true;
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FaqList from '../components/FaqList.astro';
+import RepairInterchange from '../components/RepairInterchange.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import { getCmsDataset, isTrustedPublicContent, metaBoolean, metaString, metaStrings } from '../lib/cms';
+
+const dataset = await getCmsDataset();
+const { settings, services, problems, faqs, technicians, locations, repairCases, warranties } = dataset;
+const publicTechnicians = technicians.filter(isTrustedPublicContent);
+const publicLocations = locations.filter(isTrustedPublicContent);
+const publicCases = repairCases.filter((item) => !import.meta.env.PROD || (isTrustedPublicContent(item) && metaBoolean(item, 'publish_consent')));
+const publicWarranties = warranties.filter(isTrustedPublicContent);
+const faqSchema = !settings.demo_mode && faqs.length > 0 ? {
+  '@context':'https://schema.org',
+  '@type':'FAQPage',
+  mainEntity:faqs.map((faq) => ({ '@type':'Question', name:faq.title, acceptedAnswer:{ '@type':'Answer', text:faq.excerpt } })),
+} : null;
+---
+
+<BaseLayout title="Direpair — Repair Elektronik Non-Mainstream" description="Diagnosis dan repair TWS, vacuum, perangkat rumah tangga, serta sepeda listrik dengan quotation sebelum pekerjaan dimulai.">
+  <RepairInterchange bookingPath={settings.booking_path} statusPath={settings.status_path} tagline={settings.tagline} />
+
+  <section class="section service-section">
+    <div class="container route-section-heading">
+      <p class="section-marker"><span></span>Jalur perangkat</p>
+      <div><h2>Perangkat berbeda.<br />Standar diagnosis tetap sama.</h2><p class="lede">Kategori, gambar, kisaran biaya, dan metode layanan berasal dari WordPress. Pilih jalur terdekat—detail final selalu mengikuti kondisi unit.</p></div>
+      <a class="button secondary" href="/layanan/">Buka semua layanan</a>
+    </div>
+    <div class="container service-registry">{services.slice(0, 4).map((service) => <ServiceCard service={service} />)}</div>
+  </section>
+
+  <section class="section diagnostic-section">
+    <div class="container diagnostic-layout">
+      <div class="diagnostic-heading">
+        <p class="section-marker"><span></span>Gejala masuk</p>
+        <h2>Tidak perlu menebak nama kerusakannya.</h2>
+        <p>Pilih gejala yang paling mendekati. Panduan memberi langkah aman awal, lalu diagnosis unit menentukan tindakan berikutnya.</p>
+      </div>
+      <div class="problem-routes">
+        {problems.slice(0, 4).map((problem, index) => <a href={`/masalah/${problem.slug}/`}>
+          <span class="problem-code">GJ-{String(index + 1).padStart(2, '0')}</span>
+          <strong>{problem.title}</strong>
+          <p>{metaString(problem, 'quick_answer', problem.excerpt)}</p>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5" /></svg>
+        </a>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section process-section">
+    <div class="container route-section-heading process-heading">
+      <p class="section-marker"><span></span>Jalur keputusan</p>
+      <div><h2>Kamu memegang keputusan di setiap perhentian.</h2><p class="lede">Booking bukan persetujuan repair. Quotation baru dibuat setelah temuan diagnosis dicatat.</p></div>
+    </div>
+    <ol class="container process-route">
+      <li><span>IN-01</span><h3>Ceritakan gejala</h3><p>Perangkat, keluhan, foto opsional, dan metode service masuk sebagai satu request.</p></li>
+      <li><span>DG-02</span><h3>Diagnosis unit</h3><p>Teknisi mencatat temuan, repairability, dan estimasi waktu.</p></li>
+      <li><span>QT-03</span><h3>Tinjau quotation</h3><p>Jasa, komponen, pajak, discount, dan deposit dipisahkan.</p></li>
+      <li><span>RP-04</span><h3>Repair dan pantau</h3><p>Status privat bergerak sampai QC, pembayaran, dan serah terima.</p></li>
+    </ol>
+  </section>
+
+  <section class="section quote-section">
+    <div class="container quote-ticket">
+      <div><p class="ticket-code">TIKET HARGA / QT-03</p><h2>Kisaran untuk orientasi.<br />Quotation untuk keputusan.</h2></div>
+      <div><p>Harga publik, biaya diagnosis, foto teknisi, area layanan, SLA, dan kebijakan garansi dikelola dari WordPress—bukan dikunci di komponen.</p><a href="/harga/">Lihat kisaran per layanan <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5" /></svg></a></div>
+    </div>
+  </section>
+
+  {(publicTechnicians.length > 0 || publicCases.length > 0) && <section class="section evidence-section">
+    <div class="container route-section-heading">
+      <p class="section-marker"><span></span>Bukti terverifikasi</p>
+      <div><h2>Hanya yang siap dipublikasikan.</h2><p class="lede">Profil dan repair case berasal dari WordPress. Kasus pelanggan memerlukan izin publikasi.</p></div>
+    </div>
+    <div class="container evidence-grid">
+      {publicTechnicians.slice(0, 2).map((technician) => <article class="person-record">
+        {technician.featured_image ? <img src={technician.featured_image.url} alt={technician.featured_image.alt || technician.title} width={technician.featured_image.width} height={technician.featured_image.height} loading="lazy" /> : <div class="profile-placeholder" aria-hidden="true">{technician.title.replace('[Demo] ', '').charAt(0)}</div>}
+        <div><span class="tag">{metaBoolean(technician, 'is_demo') ? 'Fixture demo' : 'Tim teknisi'}</span><h3>{technician.title}</h3><p>{technician.excerpt}</p>{metaStrings(technician, 'specialties').length > 0 && <small>{metaStrings(technician, 'specialties').join(' · ')}</small>}</div>
+      </article>)}
+      {publicCases.slice(0, 2).map((repairCase) => <article class="case-record">
+        {repairCase.featured_image && <img src={repairCase.featured_image.url} alt={repairCase.featured_image.alt || repairCase.title} width={repairCase.featured_image.width} height={repairCase.featured_image.height} loading="lazy" />}
+        <span class="tag">{metaBoolean(repairCase, 'is_demo') ? 'Fixture demo' : 'Repair case berizin'}</span><h3>{repairCase.title}</h3><p>{repairCase.excerpt}</p><dl><div><dt>Diagnosis</dt><dd>{metaString(repairCase, 'diagnosis_summary', 'Ditampilkan setelah konten diverifikasi.')}</dd></div><div><dt>Tindakan</dt><dd>{metaString(repairCase, 'repair_action', 'Ditampilkan setelah konten diverifikasi.')}</dd></div></dl>
+      </article>)}
+    </div>
+  </section>}
+
+  {(publicLocations.length > 0 || publicWarranties.length > 0) && <section class="section support-section">
+    <div class="container support-route">
+      {publicLocations.slice(0, 1).map((location) => <article><span>LOKASI</span><h2>{location.title}</h2><p>{location.excerpt}</p><a href="/lokasi/">Lihat informasi lokasi</a></article>)}
+      {publicWarranties.slice(0, 1).map((warranty) => <article><span>GARANSI</span><h2>{warranty.title}</h2><p>{metaString(warranty, 'warranty_summary', warranty.excerpt)}</p><a href="/garansi/">Baca ringkasan garansi</a></article>)}
+    </div>
+  </section>}
+
+  <section class="section faq-section"><div class="narrow"><div class="faq-heading"><h2>Sebelum unit diperiksa.</h2><p>Jawaban yang paling sering dibutuhkan sebelum memulai diagnosis.</p></div><FaqList items={faqs} /></div></section>
+
+  <section class="section-sm final-section"><div class="container final-terminal"><div><span>TERMINAL IN-01</span><h2>Ceritakan perangkatmu.</h2><p>Booking mencatat kebutuhanmu. Keputusan biaya tetap dilakukan setelah diagnosis.</p></div><a class="button" href={settings.booking_path}>Mulai diagnosis <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5" /></svg></a></div></section>
+  {faqSchema && <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+</BaseLayout>
+
+<style>
+  .service-section{border-top:2px solid var(--route-navy);background:rgba(239,228,206,.74)}
+  .route-section-heading{display:grid;grid-template-columns:170px minmax(0,1fr) auto;align-items:end;gap:44px;margin-bottom:54px}.section-marker{display:flex;align-items:center;gap:11px;margin:0;color:var(--route-navy);font:730 .7rem/1.2 var(--font-code);text-transform:uppercase}.section-marker span{display:block;width:24px;height:13px;border:4px solid currentColor;border-radius:50%;background:var(--paper)}.route-section-heading .lede{margin:20px 0 0}.service-registry{display:grid;gap:16px}
+  .diagnostic-section{background:var(--route-navy);color:var(--paper)}.diagnostic-layout{display:grid;grid-template-columns:.8fr 1.2fr;gap:90px}.diagnostic-heading{position:sticky;top:130px;align-self:start}.diagnostic-heading .section-marker{color:var(--route-yellow)}.diagnostic-heading h2{max-width:12ch}.diagnostic-heading>p:last-child{max-width:48ch;margin-top:24px;color:#bed0dc}.problem-routes{border-top:1px solid #4b6578}.problem-routes a{display:grid;grid-template-columns:86px minmax(170px,.75fr) 1.25fr 28px;align-items:center;gap:24px;padding:25px 0;border-bottom:1px solid #4b6578;color:var(--paper)}.problem-routes a:hover{color:var(--route-yellow)}.problem-routes .problem-code{font:730 .68rem/1.2 var(--font-code);color:var(--route-yellow)}.problem-routes p{margin:0;color:#bed0dc;font-size:.88rem}.problem-routes svg,.quote-ticket svg,.final-terminal svg{width:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .process-heading{grid-template-columns:170px 1fr}.process-route{position:relative;display:grid;grid-template-columns:repeat(4,1fr);list-style:none;padding:50px 0 0;margin-bottom:0}.process-route::before{content:'';position:absolute;left:0;right:0;top:18px;height:5px;background:var(--route-navy)}.process-route li{position:relative;padding:30px 32px 0 0}.process-route li::before{content:'';position:absolute;left:0;top:-40px;width:22px;height:22px;border:6px solid var(--route-navy);border-radius:50%;background:var(--paper)}.process-route li:not(:last-child)::after{content:'›››';position:absolute;right:20px;top:-38px;color:var(--route-red);font:800 .8rem/1 var(--font-code)}.process-route span{font:760 .68rem/1.2 var(--font-code);color:var(--route-red)}.process-route h3{margin:16px 0 10px}.process-route p{color:var(--muted);font-size:.88rem}
+  .quote-section{padding-top:38px}.quote-ticket{position:relative;display:grid;grid-template-columns:1.2fr .8fr;gap:76px;padding:64px 70px;background:var(--route-yellow);clip-path:polygon(0 0,100% 0,100% 42%,98% 45%,100% 48%,100% 100%,0 100%,0 72%,2% 69%,0 66%)}.quote-ticket::before{content:'';position:absolute;left:55%;top:22px;bottom:22px;border-left:2px dashed rgba(1,29,56,.5)}.ticket-code{font:760 .72rem/1.2 var(--font-code);text-transform:uppercase}.quote-ticket h2{font-size:clamp(2.3rem,4.2vw,4.4rem)}.quote-ticket>div:last-child{align-self:end}.quote-ticket a{display:inline-flex;align-items:center;gap:10px;font-weight:790;text-decoration:underline}.quote-ticket p{max-width:56ch}
+  .evidence-section{background:rgba(239,228,206,.72)}.evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.person-record,.case-record{border-top:2px solid var(--route-green);background:rgba(255,250,240,.8)}.person-record{display:grid;grid-template-columns:190px 1fr}.person-record img,.profile-placeholder{width:190px;height:100%;min-height:260px;object-fit:cover}.profile-placeholder{display:grid;place-items:center;background:var(--route-green);color:var(--paper);font-size:4rem;font-weight:850}.person-record>div:last-child,.case-record{padding:28px}.person-record h3,.case-record h3{margin:18px 0 10px}.person-record p,.case-record p{color:var(--muted)}.case-record{border-top-color:var(--route-blue)}.case-record>img{width:100%;aspect-ratio:16/8;object-fit:cover;margin:-28px -28px 24px;width:calc(100% + 56px);max-width:none}.case-record dl div{display:grid;grid-template-columns:90px 1fr;gap:16px;padding:12px 0;border-top:1px solid var(--line)}.case-record dt{font:700 .68rem/1.4 var(--font-code);text-transform:uppercase}.case-record dd{margin:0}
+  .support-section{background:var(--route-navy);color:var(--paper)}.support-route{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:100px}.support-route::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:5px;background:var(--route-yellow);transform:translateX(-50%)}.support-route article{position:relative}.support-route article:first-child{text-align:right}.support-route article::after{content:'';position:absolute;top:8px;width:20px;height:20px;border:5px solid var(--route-yellow);border-radius:50%;background:var(--route-navy)}.support-route article:first-child::after{right:-61px}.support-route article:last-child::after{left:-61px}.support-route span{color:var(--route-yellow);font:750 .68rem/1.2 var(--font-code)}.support-route h2{margin:16px 0}.support-route article:first-child h2{margin-left:auto}.support-route p{color:#bed0dc}.support-route a{color:var(--route-yellow);font-weight:780}
+  .faq-heading{display:grid;grid-template-columns:1fr .6fr;align-items:end;gap:36px;margin-bottom:44px}.faq-heading p{margin:0;color:var(--muted)}.final-section{padding-top:0}.final-terminal{display:flex;justify-content:space-between;align-items:center;gap:40px;padding:42px 48px;border:2px solid var(--route-navy);border-radius:12px;background:rgba(255,250,240,.86)}.final-terminal span{font:750 .68rem/1.2 var(--font-code);color:var(--route-red)}.final-terminal h2{margin:10px 0}.final-terminal p{margin:0;color:var(--muted)}.final-terminal .button svg{width:22px}
+  @media(max-width:980px){.route-section-heading{grid-template-columns:140px 1fr}.route-section-heading>.button{grid-column:2;justify-self:start}.diagnostic-layout{grid-template-columns:1fr;gap:50px}.diagnostic-heading{position:static}.problem-routes a{grid-template-columns:72px .8fr 1.2fr 24px}.process-route{grid-template-columns:repeat(2,1fr);gap:36px 0}.process-route::before{display:none}.process-route li{border-top:2px solid var(--route-navy)}.process-route li::before{top:-14px}.process-route li::after{display:none}.quote-ticket{grid-template-columns:1fr;gap:42px}.quote-ticket::before{left:30px;right:30px;top:52%;bottom:auto;border-left:0;border-top:2px dashed rgba(1,29,56,.5)}.support-route{gap:70px}}
+  @media(max-width:700px){.route-section-heading{grid-template-columns:1fr;gap:24px}.route-section-heading>.button{grid-column:auto}.problem-routes a{grid-template-columns:64px 1fr 24px}.problem-routes p{grid-column:2/4}.process-route{grid-template-columns:1fr;gap:30px}.quote-ticket{padding:48px 28px;clip-path:polygon(0 0,100% 0,100% 44%,97% 47%,100% 50%,100% 100%,0 100%,0 75%,3% 72%,0 69%)}.quote-ticket::before{display:none}.evidence-grid,.support-route{grid-template-columns:1fr}.person-record{grid-template-columns:1fr}.person-record img,.profile-placeholder{width:100%;height:220px;min-height:0}.support-route{gap:64px}.support-route::before{left:10px}.support-route article,.support-route article:first-child{text-align:left;padding-left:46px}.support-route article:first-child h2{margin-left:0}.support-route article:first-child::after,.support-route article:last-child::after{left:0;right:auto}.faq-heading{grid-template-columns:1fr}.final-terminal{align-items:flex-start;flex-direction:column;padding:34px 26px}}
+</style>

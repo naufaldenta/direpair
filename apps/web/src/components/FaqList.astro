@@ -1,0 +1,11 @@
+---
+import type { CmsContent } from '../lib/cms-types';
+interface Props { items: CmsContent[]; }
+const { items } = Astro.props;
+---
+<div class="faq-list">
+  {items.map((item, index) => <details open={index === 0}><summary><span class="faq-index">Q{String(index + 1).padStart(2, '0')}</span><span class="faq-title">{item.title}</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v14M3 10h14"/></svg></summary><div class="faq-answer" set:html={item.content || `<p>${item.excerpt}</p>`} /></details>)}
+</div>
+<style>
+  .faq-list{border-top:1px solid var(--ink)}details{border-bottom:1px solid var(--ink)}summary{display:grid;grid-template-columns:56px 1fr 32px;align-items:center;gap:16px;padding:22px 0;cursor:pointer;font-weight:760;font-size:1.04rem;list-style:none}summary::-webkit-details-marker{display:none}.faq-index{color:var(--route-red);font-family:var(--font-mono);font-size:.7rem;letter-spacing:.12em}.faq-title{line-height:1.25}summary svg{width:20px;fill:none;stroke:currentColor;stroke-width:1.7;transition:transform .2s ease}details[open] summary svg{transform:rotate(45deg)}.faq-answer{max-width:72ch;padding:0 48px 22px 72px;color:var(--muted)}.faq-answer :global(p){margin:0}@media(max-width:560px){summary{grid-template-columns:42px 1fr 24px;gap:10px}.faq-answer{padding-left:52px;padding-right:0}}
+</style>

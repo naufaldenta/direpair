@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import type { CmsContent } from '../lib/cms-types';
+
+interface Props { policy?: CmsContent; fallbackTitle: string; fallbackDescription: string; }
+const { policy, fallbackTitle, fallbackDescription } = Astro.props;
+---
+<BaseLayout title={`${policy?.title ?? fallbackTitle} · Direpair`} description={policy?.excerpt ?? fallbackDescription} noindex={!policy}>
+  <section class="page-hero"><div class="narrow"><span class="route-code">POLICY / WORDPRESS</span><h1>{policy?.title ?? fallbackTitle}</h1><p class="lede">{policy?.excerpt ?? fallbackDescription}</p></div></section>
+  <section class="section"><div class="narrow">{policy ? <article class="prose card" set:html={policy.content}></article> : <article class="empty"><h2>Dokumen final belum dipublikasikan.</h2><p>Pengumpulan data atau checkout production harus menunggu review bisnis/legal dan kebijakan yang terverifikasi.</p></article>}</div></section>
+</BaseLayout>
+<style>.page-hero{padding:78px 0;background:var(--warm)}.page-hero .lede{margin-top:22px}.prose{padding:clamp(28px,6vw,56px)}.empty{padding:35px;border-top:2px solid var(--orange);background:var(--warm)}</style>

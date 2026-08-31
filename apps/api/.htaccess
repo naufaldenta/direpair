@@ -1,0 +1,26 @@
+Options -Indexes
+
+RewriteEngine On
+
+# Keep cPanel AutoSSL domain-control validation reachable.
+RewriteRule ^\.well-known/acme-challenge/ - [L]
+
+# Deny every other dotfile/dot-directory even if a future upload adds one.
+RewriteRule (^|/)\. - [F,L,NC]
+
+# Block application source, dependencies, private uploads, and repository metadata.
+RewriteRule ^(?:\.git|app|bootstrap|config|database|deploy|node_modules|resources|routes|storage|tests|vendor)(?:/|$) - [F,L,NC]
+
+# Block sensitive configuration and build files in the project root.
+RewriteRule ^(?:\.env(?:\..*)?|artisan|composer\.(?:json|lock)|package(?:-lock)?\.json|pnpm-lock\.yaml|phpunit\.xml|vite\.config\..*|AGENTS\.md|README(?:\.md)?)$ - [F,L,NC]
+
+# Route the empty domain root explicitly before directory indexing can return 403.
+RewriteRule ^$ public/index.php [L]
+
+# Keep public URLs free from the implementation-specific /public prefix.
+RewriteCond %{THE_REQUEST} \s/+public(?:[/?\s]) [NC]
+RewriteRule ^public(?:/(.*))?$ /$1 [R=302,L,NE]
+
+# Send every allowed request through Laravel's public directory.
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ public/$1 [L]

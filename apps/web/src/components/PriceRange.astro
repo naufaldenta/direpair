@@ -1,0 +1,12 @@
+---
+import { formatRupiah } from '../lib/format';
+interface Props { from: number | null; to: number | null; diagnosis: number | null; compact?: boolean; }
+const { from, to, diagnosis, compact = false } = Astro.props;
+---
+<div class:list={['price-range', { compact }]}>
+  <div><span>Kisaran jasa</span><strong>{from !== null ? formatRupiah(from) : 'Setelah diagnosis'}{to !== null && ` – ${formatRupiah(to)}`}</strong></div>
+  {diagnosis !== null && <div><span>Biaya diagnosis</span><strong>{formatRupiah(diagnosis)}</strong></div>}
+</div>
+<style>
+  .price-range{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;overflow:hidden;border:1px solid var(--ink);background:var(--ink)}.price-range>div{padding:16px;background:var(--paper)}.price-range span{display:block;color:var(--route-red);font-family:var(--font-mono);font-size:.64rem;font-weight:750;text-transform:uppercase;letter-spacing:.09em}.price-range strong{font-size:1rem}.compact{grid-template-columns:1fr}.compact>div{padding:12px 14px}@media(max-width:480px){.price-range{grid-template-columns:1fr}}
+</style>

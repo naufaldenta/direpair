@@ -1,0 +1,16 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FaqList from '../components/FaqList.astro';
+import { getCmsDataset } from '../lib/cms';
+
+const { faqs, settings } = await getCmsDataset();
+const schema = !settings.demo_mode && faqs.length > 0 ? { '@context':'https://schema.org', '@type':'FAQPage', mainEntity:faqs.map((faq)=>({ '@type':'Question', name:faq.title, acceptedAnswer:{ '@type':'Answer', text:faq.excerpt } })) } : null;
+---
+<BaseLayout title="FAQ Repair · Direpair" description="Jawaban tentang diagnosis, biaya, quotation, pembayaran, metode layanan, status repair, dan garansi Direpair.">
+  <section class="page-hero"><div class="narrow"><span class="route-code">FAQ / INTAKE</span><h1>Sebelum perangkat masuk.</h1><p class="lede">Jawaban ini dikelola dari WordPress dan dapat disesuaikan saat kebijakan bisnis Direpair berubah.</p></div></section>
+  <section class="section"><div class="narrow"><FaqList items={faqs} /></div></section>
+  <section class="section-sm"><div class="narrow final"><div><h2>Masih ada yang belum jelas?</h2><p>Ajukan perangkat dan keluhannya tanpa komitmen repair.</p></div><a class="button" href={settings.booking_path}>Mulai booking</a></div></section>
+  {schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
+</BaseLayout>
+<style>.page-hero{padding:78px 0;background:var(--warm)}.page-hero .lede{margin-top:22px}.final{display:flex;justify-content:space-between;align-items:center;gap:28px;padding:32px;border:1px solid var(--line);border-radius:12px;background:var(--warm)}.final p{margin:8px 0 0;color:var(--muted)}@media(max-width:620px){.final{align-items:flex-start;flex-direction:column}}</style>

@@ -1,0 +1,23 @@
+---
+export const prerender = true;
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DeviceArt from '../../components/DeviceArt.astro';
+import { getCmsDataset, isTrustedPublicContent, metaString } from '../../lib/cms';
+import { serviceIcon } from '../../lib/format';
+import type { CmsContent } from '../../lib/cms-types';
+export async function getStaticPaths() { const dataset = await getCmsDataset(); return dataset.problems.map((problem) => ({ params:{ slug:problem.slug }, props:{ problem } })); }
+interface Props { problem: CmsContent; }
+const { problem } = Astro.props;
+const dataset = await getCmsDataset();
+const ids = Array.isArray(problem.meta.related_service_ids) ? problem.meta.related_service_ids : [];
+const service = dataset.services.find((item) => ids.includes(item.id)) ?? dataset.services[0];
+const noindex = !isTrustedPublicContent(problem) || problem.meta.noindex === true || problem.meta.noindex === '1';
+---
+<BaseLayout title={`${metaString(problem,'seo_title',problem.title)} | Direpair`} description={metaString(problem,'seo_description',problem.excerpt)} noindex={noindex}>
+  <section class="problem-hero"><div class="container hero-grid"><div><span class="route-code">PROBLEM / GUIDE</span><h1>{problem.title}</h1><p class="lede">{problem.excerpt}</p></div>{problem.featured_image ? <img class="hero-image" src={problem.featured_image.url} alt={problem.featured_image.alt || problem.title} width={problem.featured_image.width} height={problem.featured_image.height} /> : <DeviceArt kind={serviceIcon(service?.slug ?? 'lainnya')} label={`Ilustrasi ${problem.title}`} />}</div></section>
+  <section class="answer"><div class="narrow"><span>Jawaban singkat</span><h2>{metaString(problem,'quick_answer',problem.excerpt)}</h2></div></section>
+  <section class="section"><div class="narrow prose" set:html={problem.content}></div></section>
+  <section class="section safe-section"><div class="container safe-grid"><div><span class="route-code">SAFETY / STOP</span><h2>Hentikan pemakaian bila ada tanda bahaya.</h2></div><ul><li>Unit atau baterai terasa sangat panas</li><li>Muncul bau, asap, percikan, atau suara tidak biasa</li><li>Baterai mengembung atau casing berubah bentuk</li><li>Kabel dan konektor tampak meleleh atau terbakar</li></ul></div></section>
+  {service && <section class="section-sm"><div class="container cta"><div><span class="route-code">DIAGNOSIS / ENTRY</span><h2>{service.title}</h2><p>Booking tidak otomatis menyetujui pekerjaan. Kamu tetap meninjau quotation lebih dulu.</p></div><a class="button" href={`/booking/?service=${service.slug}&symptom=${problem.slug}`}>Cek kerusakan</a></div></section>}
+</BaseLayout>
+<style>.problem-hero{padding:72px 0}.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:center}.hero-image{width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid var(--line);border-radius:12px}.problem-hero .lede{margin-top:24px}.answer{padding:60px 0;background:var(--yellow)}.answer span{display:block;margin-bottom:13px;font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em}.answer h2{font-size:clamp(1.8rem,4vw,3.2rem)}.safe-section{background:var(--route-navy);color:var(--paper)}.safe-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px}.safe-grid ul{margin:0;padding:0;list-style:none}.safe-grid li{padding:16px 0;border-bottom:1px solid #345b79}.safe-grid li::before{content:'!';display:inline-grid;place-items:center;width:24px;height:24px;margin-right:12px;border-radius:50%;background:var(--orange);font-weight:900}.cta{display:flex;align-items:center;justify-content:space-between;gap:35px;padding:40px;border:1px solid var(--line);border-radius:12px;background:var(--warm)}.cta p{margin:8px 0 0;color:var(--muted)}@media(max-width:800px){.hero-grid,.safe-grid{grid-template-columns:1fr}.cta{align-items:flex-start;flex-direction:column}}</style>

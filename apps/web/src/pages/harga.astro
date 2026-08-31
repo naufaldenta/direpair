@@ -1,0 +1,14 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PriceRange from '../components/PriceRange.astro';
+import { getCmsDataset, metaNumber } from '../lib/cms';
+
+const { services, settings } = await getCmsDataset();
+---
+<BaseLayout title="Kisaran Harga Service · Direpair" description="Lihat kisaran harga dan biaya diagnosis per kategori. Quotation final selalu diberikan setelah pemeriksaan unit.">
+  <section class="page-hero"><div class="narrow"><span class="route-code">PRICING / EDITABLE</span><h1>Kisaran dulu.<br/>Keputusan setelah diagnosis.</h1><p class="lede">Angka di halaman ini dikelola dari WordPress. Harga final, item pekerjaan, komponen, deposit, dan masa berlaku selalu tercatat pada quotation individual.</p></div></section>
+  <section class="section"><div class="container price-grid">{services.map((service)=><article class="card"><span class="tag">{service.title}</span><PriceRange from={metaNumber(service,'price_from')} to={metaNumber(service,'price_to')} diagnosis={metaNumber(service,'diagnosis_fee')} /><p>{service.excerpt}</p><a href={`/layanan/${service.slug}/`}>Detail layanan</a></article>)}</div></section>
+  <section class="section-sm"><div class="narrow policy"><strong>Yang perlu diketahui</strong><p>{settings.default_pricing_disclaimer} Booking tidak otomatis menyetujui repair atau pembayaran penuh.</p><a class="button" href={settings.booking_path}>Ajukan diagnosis</a></div></section>
+</BaseLayout>
+<style>.page-hero{padding:78px 0;background:var(--warm)}.page-hero .lede{margin-top:24px}.price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.price-grid article{padding:28px}.price-grid p{color:var(--muted)}.price-grid a{font-weight:850;color:var(--orange-dark)}.policy{padding:34px;border-top:4px solid var(--teal);background:#fff}.policy p{margin:8px 0 20px;color:var(--muted)}@media(max-width:720px){.price-grid{grid-template-columns:1fr}}</style>

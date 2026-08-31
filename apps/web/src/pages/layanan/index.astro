@@ -1,0 +1,15 @@
+---
+export const prerender = true;
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import { getCmsDataset } from '../../lib/cms';
+const { services, settings } = await getCmsDataset();
+---
+<BaseLayout title="Layanan Repair Elektronik | Direpair" description="Layanan diagnosis dan repair untuk TWS, vacuum, household electronics, sepeda listrik, serta perangkat lainnya.">
+  <section class="page-hero"><div class="container"><span class="route-code">SERVICE / REGISTRY</span><h1>Repair untuk perangkat yang sering ditolak.</h1><p class="lede">Pilih kategori terdekat. Bila perangkatmu belum ada, kirim detail melalui “Produk Lainnya”—daftar ini dapat diperluas klien dari WordPress.</p></div></section>
+  <section class="section"><div class="container service-grid">{services.map((service) => <ServiceCard service={service} />)}</div></section>
+  <section class="section-sm"><div class="container service-cta"><div><h2>Tidak menemukan kategorinya?</h2><p>Kirim foto dan keluhan. Tim akan menilai apakah unit dapat masuk proses diagnosis.</p></div><a class="button" href={`${settings.booking_path}?service=lainnya`}>Cek perangkat lain</a></div></section>
+</BaseLayout>
+<style>
+  .page-hero{padding:86px 0 44px}.page-hero h1{max-width:900px}.page-hero .lede{margin-top:23px}.service-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.service-cta{display:flex;justify-content:space-between;align-items:center;gap:30px;padding:38px;border:1px solid var(--line);border-radius:12px;background:var(--warm)}.service-cta p{margin:8px 0 0;color:var(--muted)}@media(max-width:760px){.service-grid{grid-template-columns:1fr}.service-cta{align-items:flex-start;flex-direction:column}}
+</style>

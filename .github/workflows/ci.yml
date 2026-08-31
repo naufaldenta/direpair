@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PUBLIC_SITE_URL: https://staging.example.test
+      PUBLIC_API_BASE_URL: https://api.staging.example.test/api/v1
+      CMS_BASE_URL: https://cms.staging.example.test/wp-json/direpair/v1
+      CMS_FIXTURE_FALLBACK: "true"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check:web
+      - run: pnpm build:web
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, sqlite3, pdo_sqlite
+          coverage: none
+          tools: composer:v2
+
+      - run: composer install --working-dir=apps/api --no-interaction --prefer-dist
+      - run: cp apps/api/.env.example apps/api/.env
+      - run: php apps/api/artisan key:generate
+      - run: touch apps/api/database/database.sqlite
+      - run: php apps/api/artisan migrate --seed --force
+      - run: php apps/api/vendor/bin/pint --test
+      - run: php apps/api/artisan test --compact
+      - run: composer audit --working-dir=apps/api
+      - run: find apps/wordpress-plugin/direpair-content -name '*.php' -print0 | xargs -0 -n1 php -l

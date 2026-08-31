@@ -1,0 +1,13 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCmsDataset, isTrustedPublicContent, metaBoolean, metaString, metaStrings } from '../lib/cms';
+
+const dataset = await getCmsDataset();
+const locations = dataset.locations.filter(isTrustedPublicContent);
+---
+<BaseLayout title="Lokasi & Area Layanan · Direpair" description="Alamat, jam, area, kontak, dan metode layanan Direpair yang telah diverifikasi." noindex={locations.length===0}>
+  <section class="page-hero"><div class="narrow"><span class="route-code">LOCATION / VERIFIED</span><h1>Datang, pickup, atau home service.</h1><p class="lede">Lokasi production hanya boleh dipublikasikan setelah alamat dan detail operasional diverifikasi. Fixture tidak menghasilkan klaim LocalBusiness.</p></div></section>
+  <section class="section"><div class="container location-grid">{locations.length ? locations.map((location)=><article class="card">{location.featured_image&&<img src={location.featured_image.url} alt={location.featured_image.alt || location.title} width={location.featured_image.width} height={location.featured_image.height} />}<div class="copy"><span class="tag">{metaBoolean(location,'is_demo')?'Lokasi demo':'Lokasi terverifikasi'}</span><h2>{location.title}</h2><p>{location.excerpt}</p><dl><div><dt>Area</dt><dd>{[metaString(location,'city'),metaString(location,'region')].filter(Boolean).join(', ') || 'Isi dari WordPress'}</dd></div><div><dt>Alamat</dt><dd>{metaString(location,'street_address','Ditampilkan setelah diverifikasi')}</dd></div><div><dt>Metode</dt><dd>{metaStrings(location,'service_methods').join(' · ') || 'Dikonfirmasi oleh tim'}</dd></div></dl></div></article>) : <div class="empty"><h2>Belum ada lokasi publik.</h2><p>Hubungi Direpair melalui kanal yang tampil di footer. Website tidak menebak alamat atau membuat halaman area palsu.</p></div>}</div></section>
+</BaseLayout>
+<style>.page-hero{padding:78px 0;background:var(--warm)}.page-hero .lede{margin-top:22px}.location-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.location-grid article{overflow:hidden}.location-grid img{width:100%;aspect-ratio:16/9;object-fit:cover}.copy{padding:29px}.copy h2{margin:14px 0 10px;font-size:2rem}.copy>p{color:var(--muted)}dl{margin:20px 0 0}dl div{padding:13px 0;border-top:1px solid var(--line)}dt{color:var(--muted);font-size:.72rem;font-weight:800;text-transform:uppercase}dd{margin:4px 0 0;font-weight:750}.empty{grid-column:1/-1;max-width:720px;padding:35px;border-top:2px solid var(--teal);background:var(--warm)}@media(max-width:720px){.location-grid{grid-template-columns:1fr}}</style>

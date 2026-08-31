@@ -1,0 +1,143 @@
+---
+interface Props {
+  bookingPath: string;
+  statusPath: string;
+  tagline: string;
+}
+
+const { bookingPath, statusPath, tagline } = Astro.props;
+---
+
+<section class="interchange-hero" data-route-hero aria-labelledby="interchange-title">
+  <div class="interchange-shell">
+    <div class="interchange-intro">
+      <h1 id="interchange-title"><span>Beda perangkat.</span><span>Satu jalur yang bisa dilacak.</span></h1>
+      <p>{tagline} Setiap request bergerak dari gejala menuju diagnosis, quotation, repair, lalu selesai.</p>
+    </div>
+
+    <div class="route-canvas" aria-label="Alur perangkat menuju diagnosis, quotation, repair, dan selesai">
+      <svg class="route-lines" viewBox="0 0 1400 470" preserveAspectRatio="none" aria-hidden="true">
+        <path class="route-path route-red" pathLength="1" d="M152 80H490C558 80 570 132 633 132H690" />
+        <path class="route-path route-green" pathLength="1" d="M152 215H476C550 215 564 212 628 212H690" />
+        <path class="route-path route-blue" pathLength="1" d="M152 350H472C554 350 570 290 633 290H690" />
+        <path class="route-path route-main" pathLength="1" d="M895 212H1372" />
+        <circle class="station-dot route-red" cx="152" cy="80" r="10" />
+        <circle class="station-dot route-green" cx="152" cy="215" r="10" />
+        <circle class="station-dot route-blue" cx="152" cy="350" r="10" />
+        <circle class="station-dot route-red" cx="690" cy="132" r="11" />
+        <circle class="station-dot route-green" cx="690" cy="212" r="11" />
+        <circle class="station-dot route-blue" cx="690" cy="290" r="11" />
+        <circle class="station-dot route-main" cx="1015" cy="212" r="12" />
+        <circle class="station-dot route-main" cx="1170" cy="212" r="12" />
+        <circle class="station-dot route-main" cx="1324" cy="212" r="12" />
+        <path class="route-arrow" d="m1364 194 24 18-24 18" />
+      </svg>
+
+      <ul class="device-stations" aria-label="Contoh perangkat">
+        <li class="station camera">
+          <span class="station-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 15h9l3-5h12l3 5h9v25H6z"/><circle cx="24" cy="27" r="9"/><path d="M36 20h2"/></svg></span>
+          <span><strong>Kamera</strong><small>CAM-10</small></span>
+        </li>
+        <li class="station console">
+          <span class="station-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="5" y="10" width="38" height="28" rx="3"/><path d="M12 21h10m-5-5v10m13-5h1m5 5h1"/><rect x="21" y="14" width="7" height="20" rx="1"/></svg></span>
+          <span><strong>Konsol</strong><small>CON-20</small></span>
+        </li>
+        <li class="station audio">
+          <span class="station-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="5" y="12" width="38" height="26" rx="3"/><path d="M10 19h13m-13 5h9"/><circle cx="31" cy="25" r="6"/><path d="M39 18h-2"/></svg></span>
+          <span><strong>Audio</strong><small>AUD-50</small></span>
+        </li>
+      </ul>
+
+      <div class="diagnosis-hub">
+        <svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="24" cy="24" r="15"/><path d="m35 35 13 13M14 24h5l3-7 5 15 4-8h5"/></svg>
+        <strong>Diagnosis</strong>
+        <span>Temuan sebelum keputusan</span>
+      </div>
+
+      <ol class="outbound-stations" aria-label="Tahapan setelah diagnosis">
+        <li>
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 5h24v38H12zM18 13h12M18 21h12M18 29h5"/><path d="M31 31c0 4-8 4-8 0s8-4 8-8-8-4-8 0"/></svg>
+          <strong>Penawaran</strong><small>QT-03</small>
+        </li>
+        <li>
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="m9 39 14-14m8-8 8-8M29 9l10 10M9 29l10 10"/><path d="M15 7c4 4 4 9 1 12l13 13-6 6-13-13c-4 1-8-1-9-5l7-7z"/></svg>
+          <strong>Repair</strong><small>RP-04</small>
+        </li>
+        <li>
+          <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="18"/><path d="m15 24 6 6 13-14"/></svg>
+          <strong>Selesai</strong><small>OK-05</small>
+        </li>
+      </ol>
+
+      <a class="service-ticket" href={bookingPath}>
+        <span class="ticket-title">Tiket servis</span>
+        <span class="ticket-line"><i>Perangkat</i><b>isi detailmu</b></span>
+        <span class="ticket-line"><i>Keluhan</i><b>ceritakan gejala</b></span>
+        <span class="ticket-line"><i>Status</i><b>pemeriksaan awal</b></span>
+        <strong>Mulai diagnosis</strong>
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 16h20m-7-7 7 7-7 7"/></svg>
+      </a>
+
+      <a class="status-reentry" href={statusPath}>
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 17h5l3-8 6 15 4-9 3 5h5"/></svg>
+        Cek status repair
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const routeHero = document.querySelector<HTMLElement>('[data-route-hero]');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (routeHero && !reducedMotion) {
+    document.documentElement.dataset.routeMotion = 'enabled';
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry?.isIntersecting) {
+        routeHero.dataset.active = 'true';
+        observer.disconnect();
+      }
+    }, { threshold: 0.2 });
+    observer.observe(routeHero);
+  }
+</script>
+
+<style>
+  .interchange-hero{position:relative;min-height:calc(100svh - 112px);padding:clamp(32px,4vw,62px) 0 36px;overflow:hidden}
+  .interchange-shell{width:min(1500px,calc(100% - 48px));margin-inline:auto}
+  .interchange-intro{position:relative;z-index:4;display:grid;grid-template-columns:minmax(0,860px) minmax(260px,410px);justify-content:space-between;align-items:end;gap:48px}
+  .interchange-intro h1{max-width:900px;font-size:clamp(3.7rem,7vw,6rem);line-height:.96;letter-spacing:-.04em}
+  .interchange-intro h1 span{display:block}
+  .interchange-intro p{max-width:41ch;margin:0 0 10px;color:var(--ink-soft);font-size:1rem}
+  .route-canvas{--status-lane:190px;--route-action-gap:20px;position:relative;min-height:500px;margin-top:-28px}
+  .route-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .route-path,.route-main,.route-red,.route-green,.route-blue,.station-dot,.route-arrow{fill:none;vector-effect:non-scaling-stroke}
+  .route-path{stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+  .route-main{stroke:var(--route-navy)}.route-red{stroke:var(--route-red)}.route-green{stroke:var(--route-green)}.route-blue{stroke:var(--route-blue)}
+  .station-dot{fill:var(--paper);stroke-width:7}.route-arrow{stroke:var(--route-navy);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+  .device-stations,.outbound-stations{list-style:none;margin:0;padding:0}
+  .station{position:absolute;left:1%;z-index:3;display:flex;align-items:center;gap:14px;color:var(--route-navy)}
+  .station.camera{top:8%}.station.console{top:36%}.station.audio{top:65%}
+  .station-icon{display:grid;place-items:center;width:78px;height:64px;border:3px solid currentColor;border-radius:12px;background:var(--paper)}
+  .camera{color:var(--route-red)}.console{color:var(--route-green)}.audio{color:var(--route-blue)}
+  .station svg,.outbound-stations svg,.diagnosis-hub svg,.status-reentry svg,.service-ticket>svg{fill:none;stroke:currentColor;stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round}
+  .station svg{width:46px;height:46px}.station strong{display:block;color:var(--route-navy);font-size:1rem;text-transform:uppercase}.station small,.outbound-stations small{display:inline-flex;margin-top:4px;padding:2px 6px;border-radius:4px;background:currentColor;color:var(--paper);font:700 .66rem/1.4 var(--font-code)}
+  .diagnosis-hub{position:absolute;left:56.43%;top:45.1%;z-index:4;display:grid;grid-template-rows:auto auto auto;place-items:center;align-content:center;gap:3px;width:218px;height:218px;border:13px solid var(--route-navy);border-radius:50%;background:var(--paper);transform:translate(-50%,-50%);text-align:center;color:var(--route-navy)}
+  .diagnosis-hub::before{content:'';position:absolute;inset:47px;border:6px solid var(--route-navy);border-radius:50%;pointer-events:none}
+  .diagnosis-hub>*{position:relative;z-index:1}
+  .diagnosis-hub svg{width:42px;height:42px}.diagnosis-hub strong{font-size:1.05rem;line-height:1;text-transform:uppercase}.diagnosis-hub span{max-width:13ch;color:var(--ink-soft);font-size:.64rem;line-height:1.3}
+  .outbound-stations{position:absolute;left:64%;right:1%;top:18%;z-index:3;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+  .outbound-stations li{display:grid;justify-items:center;text-align:center;color:var(--route-navy)}.outbound-stations svg{width:48px;height:48px;margin-bottom:22px;background:var(--paper)}.outbound-stations strong{font-size:.9rem;text-transform:uppercase}.outbound-stations small{background:var(--route-navy)}
+  .service-ticket{position:absolute;right:calc(1% + var(--status-lane) + var(--route-action-gap));bottom:0;z-index:5;display:grid;grid-template-columns:1fr auto;gap:8px 16px;width:min(380px,32vw);padding:25px 30px 24px;background:var(--route-yellow);color:var(--route-navy);clip-path:polygon(0 0,100% 0,100% 40%,96% 43%,100% 46%,100% 100%,0 100%,0 77%,4% 74%,0 71%);box-shadow:0 18px 38px rgba(1,29,56,.2);transform:rotate(-1.2deg);transition:transform .28s cubic-bezier(.16,1,.3,1),box-shadow .28s cubic-bezier(.16,1,.3,1)}
+  .service-ticket:hover{color:var(--route-navy);transform:rotate(0) translateY(-5px);box-shadow:0 24px 48px rgba(1,29,56,.24)}.service-ticket:focus-visible{outline-offset:5px}
+  .ticket-title{grid-column:1/-1;padding-bottom:10px;border-bottom:2px dashed var(--route-navy);font:800 .9rem/1 var(--font-code);text-transform:uppercase}.ticket-line{grid-column:1/-1;display:flex;justify-content:space-between;gap:18px;border-bottom:1px solid rgba(1,29,56,.42);font-size:.72rem}.ticket-line i{font-style:normal}.ticket-line b{font-weight:700}.service-ticket>strong{align-self:end;margin-top:9px;font-size:1.15rem}.service-ticket>svg{align-self:end;width:30px;height:30px}
+  .status-reentry{position:absolute;right:1%;bottom:4px;z-index:3;display:flex;align-items:center;justify-content:flex-end;gap:9px;width:var(--status-lane);min-height:44px;padding-block:8px;font-weight:750;white-space:nowrap}.status-reentry svg{width:27px;height:27px}
+  html[data-route-motion='enabled'] .route-path,html[data-route-motion='enabled'] path.route-main{stroke-dasharray:1;stroke-dashoffset:1}
+  html[data-route-motion='enabled'] [data-route-hero][data-active='true'] .route-path,html[data-route-motion='enabled'] [data-route-hero][data-active='true'] path.route-main{animation:draw-route 1.35s cubic-bezier(.16,1,.3,1) forwards}
+  html[data-route-motion='enabled'] [data-route-hero][data-active='true'] .route-green{animation-delay:.12s}html[data-route-motion='enabled'] [data-route-hero][data-active='true'] .route-blue{animation-delay:.24s}html[data-route-motion='enabled'] [data-route-hero][data-active='true'] path.route-main{animation-delay:.72s}
+  html[data-route-motion='enabled'] [data-route-hero][data-active='true'] .diagnosis-hub{animation:hub-arrival .75s .56s cubic-bezier(.16,1,.3,1) both}
+  @keyframes draw-route{to{stroke-dashoffset:0}}@keyframes hub-arrival{from{filter:blur(5px);transform:translate(-50%,-50%) scale(.9)}to{filter:none;transform:translate(-50%,-50%) scale(1)}}
+  @media(max-width:1080px){.interchange-intro{grid-template-columns:1fr}.interchange-intro p{max-width:65ch}}
+  @media(max-width:1080px){.interchange-hero{min-height:0;padding-top:32px}.interchange-shell{width:min(100% - 28px,1500px)}.interchange-intro h1{font-size:clamp(3.1rem,15vw,5rem)}.route-canvas{display:grid;grid-template-columns:minmax(0,1fr);gap:0;min-height:0;margin-top:40px;padding-left:42px}.route-lines{display:none}.device-stations,.outbound-stations,.diagnosis-hub,.service-ticket,.status-reentry{position:relative;inset:auto;min-width:0;max-width:100%;transform:none;width:auto}.device-stations{display:grid;gap:0}.station{position:relative;inset:auto;min-height:92px;padding:10px 0}.station::before,.diagnosis-hub::before,.outbound-stations li::before{content:'';position:absolute;left:-30px;right:auto;top:0;bottom:0;width:5px;border:0;border-radius:0;background:currentColor}.station::after,.diagnosis-hub::after,.outbound-stations li::after{content:'';position:absolute;left:-38px;top:50%;width:17px;height:17px;border:4px solid currentColor;border-radius:50%;background:var(--paper);transform:translateY(-50%)}.diagnosis-hub{display:grid;grid-template-columns:52px minmax(0,1fr);grid-template-rows:auto auto;align-content:center;align-items:center;justify-items:start;gap:2px 14px;height:auto;min-height:120px;border:0;border-radius:0;background:transparent;text-align:left}.diagnosis-hub::before,.diagnosis-hub::after{color:var(--route-navy)}.diagnosis-hub svg{grid-column:1;grid-row:1/3;width:52px;height:52px}.diagnosis-hub strong{grid-column:2;grid-row:1}.diagnosis-hub span{grid-column:2;grid-row:2;max-width:16ch;font-size:.72rem;line-height:1.45}.outbound-stations{display:grid;gap:0}.outbound-stations li{position:relative;display:grid;grid-template-columns:52px minmax(0,1fr) auto;align-items:center;justify-items:start;min-height:86px;text-align:left}.outbound-stations svg{margin:0}.outbound-stations li::before,.outbound-stations li::after{color:var(--route-navy)}.service-ticket{width:min(100%,620px);margin:26px 0 8px;padding:22px 20px;clip-path:polygon(0 0,100% 0,100% 44%,97% 47%,100% 50%,100% 100%,0 100%,0 78%,3% 75%,0 72%)}.service-ticket span{overflow-wrap:anywhere}.status-reentry{justify-content:flex-start;width:fit-content;margin-top:14px;white-space:normal}.route-canvas>*{order:initial}}
+  @media(max-width:1080px){html[data-route-motion='enabled'] [data-route-hero][data-active='true'] .diagnosis-hub{animation:none;transform:none}.outbound-stations{grid-template-columns:minmax(0,1fr)}}
+</style>

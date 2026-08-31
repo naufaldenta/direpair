@@ -1,0 +1,18 @@
+---
+import type { CmsContent } from '../lib/cms-types';
+import { metaNumber } from '../lib/cms';
+import { serviceIcon } from '../lib/format';
+import DeviceArt from './DeviceArt.astro';
+import PriceRange from './PriceRange.astro';
+interface Props { service: CmsContent; featured?: boolean; }
+const { service, featured = false } = Astro.props;
+const routeCode = `SRV-${String(service.id || service.slug.length).padStart(2, '0').slice(-2)}`;
+---
+<article class:list={['service-card', { featured }]}>
+  {service.featured_image ? <img class="service-image" src={service.featured_image.url} alt={service.featured_image.alt || service.title} width={service.featured_image.width} height={service.featured_image.height} loading="lazy" /> : <DeviceArt kind={serviceIcon(service.slug)} label={`Ilustrasi ${service.title}`} compact />}
+  <div class="service-copy"><span class="route-code">{routeCode}</span><h3><a href={`/layanan/${service.slug}/`}>{service.title}</a></h3><p>{service.excerpt}</p><PriceRange from={metaNumber(service,'price_from')} to={metaNumber(service,'price_to')} diagnosis={metaNumber(service,'diagnosis_fee')} compact /></div>
+  <a class="route-link" href={`/layanan/${service.slug}/`} aria-label={`Lihat detail ${service.title}`}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5"/></svg></a>
+</article>
+<style>
+  .service-card{position:relative;display:grid;grid-template-columns:152px 1fr 58px;gap:20px;align-items:stretch;border-top:1px solid var(--ink);padding:18px 0;transition:background-color .2s ease}.service-card:last-child{border-bottom:1px solid var(--ink)}.service-card:hover{background:color-mix(in srgb,var(--ticket-yellow) 22%,transparent)}.service-image{width:152px;height:100%;min-height:184px;object-fit:cover;border:1px solid var(--ink)}.service-copy{padding:4px 0}.route-code{display:block;margin-bottom:17px;color:var(--route-red);font-family:var(--font-mono);font-size:.72rem;font-weight:750;letter-spacing:.13em}.service-copy h3{margin:0 0 8px;font-size:clamp(1.45rem,2.4vw,2.25rem);line-height:.98}.service-copy h3 a{text-decoration:none}.service-copy p{max-width:58ch;margin:0 0 13px;color:var(--muted);font-size:.92rem}.route-link{display:grid;place-items:center;align-self:center;width:50px;height:50px;border:1px solid var(--ink);background:var(--paper);color:var(--ink);transition:background-color .2s,color .2s}.route-link:hover{background:var(--route-red);color:var(--paper)}.route-link svg{width:23px;fill:none;stroke:currentColor;stroke-width:1.8}.featured{padding-left:14px;background:color-mix(in srgb,var(--route-yellow) 13%,transparent)}@media(max-width:680px){.service-card{grid-template-columns:96px 1fr 44px;gap:12px}.service-image{width:96px;min-height:150px}.route-link{width:42px;height:42px}.service-copy h3{font-size:1.3rem}.service-copy p{font-size:.84rem}}@media(max-width:460px){.service-card{grid-template-columns:1fr 44px}.service-card>:first-child{grid-column:1/-1}.service-image{width:100%;height:auto;aspect-ratio:16/9;min-height:0}.route-code{margin-bottom:10px}}
+</style>

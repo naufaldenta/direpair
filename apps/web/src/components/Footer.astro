@@ -1,0 +1,21 @@
+---
+import type { SiteSettings } from '../lib/cms-types';
+interface Props { settings: SiteSettings; }
+const { settings } = Astro.props;
+const address = [settings.street_address, settings.city, settings.region, settings.postal_code].filter(Boolean).join(', ');
+---
+<footer>
+  <div class="container footer-route" aria-hidden="true"><span></span><i></i><i></i><i></i><i></i></div>
+  <div class="container footer-grid">
+    <div class="footer-intro"><a class="footer-logo" href="/">DIREPAIR</a><p>{settings.tagline}</p><p class="small dim">Diagnosis dan keputusan biaya berada pada jalur yang dapat ditelusuri.</p></div>
+    <div><strong>Layanan</strong><a href="/layanan/">Daftar layanan</a><a href="/harga/">Kisaran harga</a><a href="/masalah/">Panduan masalah</a><a href="/booking/">Mulai diagnosis</a></div>
+    <div><strong>Informasi</strong><a href="/tentang/">Cara kerja</a><a href="/tim/">Tim teknisi</a><a href="/kasus/">Repair case</a><a href="/garansi/">Garansi</a><a href="/faq/">FAQ</a></div>
+    <div><strong>Terminal kontak</strong>{settings.phone && <a href={`tel:${settings.phone}`}>{settings.phone}</a>}{settings.email && <a href={`mailto:${settings.email}`}>{settings.email}</a>}{address && <span>{address}</span>}{!settings.phone && !settings.email && !address && <span class="dim">Kontak dan lokasi belum dipublikasikan dari WordPress.</span>}<a href="/cek-status/">Cek status repair</a></div>
+  </div>
+  <div class="container legal"><span>© {new Date().getFullYear()} Direpair.</span><span><a href="/privacy/">Privasi</a> · <a href="/terms/">Syarat layanan</a> · Konten harga publik adalah kisaran; quotation final mengikuti diagnosis.</span></div>
+</footer>
+<style>
+  footer{padding:48px 0 28px;background:var(--route-navy);color:var(--paper)}.footer-route{position:relative;display:flex;justify-content:space-between;align-items:center;margin-bottom:48px}.footer-route span{position:absolute;left:0;right:0;height:4px;background:var(--route-yellow)}.footer-route i{position:relative;z-index:1;width:18px;height:18px;border:4px solid var(--route-yellow);border-radius:50%;background:var(--route-navy)}
+  .footer-grid{display:grid;grid-template-columns:1.45fr .8fr .8fr 1fr;gap:56px}.footer-grid>div{display:flex;flex-direction:column;align-items:flex-start;gap:9px}.footer-grid p{margin:0;max-width:36ch}.footer-grid strong{margin-bottom:10px;color:var(--route-yellow);font:750 .72rem/1.2 var(--font-code);text-transform:uppercase}.footer-grid a{color:var(--paper);text-underline-offset:4px}.footer-grid a:hover{color:var(--route-yellow)}.footer-logo{font-family:var(--font-display);font-weight:850;font-size:1.6rem;letter-spacing:-.03em}.dim{color:#b8c6ce}.legal{display:flex;justify-content:space-between;gap:24px;margin-top:52px;padding-top:22px;border-top:1px solid #355069;color:#b8c6ce;font-size:.75rem}.legal a{color:inherit}
+  @media(max-width:900px){.footer-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.footer-route{margin-bottom:34px}.footer-grid{grid-template-columns:1fr;gap:34px}.legal{flex-direction:column}}
+</style>

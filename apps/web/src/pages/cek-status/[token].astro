@@ -1,0 +1,11 @@
+---
+export const prerender = false;
+
+const token = Astro.params.token?.trim() ?? '';
+
+if (token.length < 32 || token === 'status') {
+  return Astro.redirect('/cek-status/', 302);
+}
+
+return Astro.redirect(`/cek-status/status/?token=${encodeURIComponent(token)}`, 302);
+---

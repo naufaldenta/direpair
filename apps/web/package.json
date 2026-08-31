@@ -1,0 +1,31 @@
+{
+  "name": "apps-web",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "check": "astro check",
+    "build:vercel": "astro check && astro build",
+    "test": "astro check",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/vercel": "^11.0.8",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/azeret-mono": "^5.3.0",
+    "astro": "^7.2.6",
+    "zod": "^4.4.3"
+  },
+  "allowScripts": {
+    "esbuild": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,13 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCmsDataset, isTrustedPublicContent, metaBoolean, metaStrings } from '../lib/cms';
+
+const dataset = await getCmsDataset();
+const technicians = dataset.technicians.filter(isTrustedPublicContent);
+---
+<BaseLayout title="Tim Teknisi · Direpair" description="Profil tim dan spesialisasi teknisi Direpair yang telah disiapkan untuk publikasi." noindex={technicians.length===0}>
+  <section class="page-hero"><div class="narrow"><span class="route-code">TEAM / VERIFIED</span><h1>Profil bukan klaim kosong.</h1><p class="lede">Nama, foto, bio, spesialisasi, dan sertifikasi dikelola dari WordPress. Konten production hanya tampil setelah ditandai terverifikasi.</p></div></section>
+  <section class="section"><div class="container team-grid">{technicians.length ? technicians.map((technician)=><article class="card">{technician.featured_image ? <img src={technician.featured_image.url} alt={technician.featured_image.alt || technician.title} width={technician.featured_image.width} height={technician.featured_image.height} /> : <div class="placeholder" aria-hidden="true">{technician.title.replace('[Demo] ','').charAt(0)}</div>}<div class="copy"><span class="tag">{metaBoolean(technician,'is_demo')?'Fixture demo':'Tim teknisi'}</span><h2>{technician.title}</h2><p>{technician.excerpt}</p>{metaStrings(technician,'specialties').length>0&&<p class="specialties"><strong>Fokus:</strong> {metaStrings(technician,'specialties').join(' · ')}</p>}{metaStrings(technician,'certifications').length>0&&<ul>{metaStrings(technician,'certifications').map((item)=><li>{item}</li>)}</ul>}</div></article>) : <div class="empty"><h2>Profil teknisi belum dipublikasikan.</h2><p>Website tetap dapat menjelaskan proses workshop tanpa membuat profil, foto, pengalaman, atau sertifikasi fiktif.</p></div>}</div></section>
+</BaseLayout>
+<style>.page-hero{padding:78px 0;background:var(--route-navy);color:var(--paper)}.page-hero .lede{margin-top:22px;color:#b8c8d2}.team-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.team-grid article{overflow:hidden}.team-grid img,.placeholder{width:100%;aspect-ratio:16/10;object-fit:cover}.placeholder{display:grid;place-items:center;background:var(--teal);color:var(--lime);font-size:5rem;font-weight:900}.copy{padding:28px}.copy h2{margin:14px 0 10px;font-size:2rem}.copy>p{color:var(--muted)}.specialties{padding-top:15px;border-top:1px solid var(--line)}.empty{grid-column:1/-1;max-width:700px;padding:35px;border-top:2px solid var(--orange);background:var(--warm)}@media(max-width:720px){.team-grid{grid-template-columns:1fr}}</style>

@@ -1,0 +1,26 @@
+{
+  "name": "direpair-platform",
+  "private": true,
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev:web": "corepack pnpm --dir apps/web exec astro dev --background",
+    "stop:web": "corepack pnpm --dir apps/web exec astro dev stop",
+    "status:web": "corepack pnpm --dir apps/web exec astro dev status",
+    "dev:api": "php apps/api/artisan serve --host=127.0.0.1 --port=8000",
+    "cms:up": "docker compose -f infra/local/docker-compose.yml up -d database wordpress",
+    "cms:status": "docker compose -f infra/local/docker-compose.yml ps",
+    "cms:seed": "docker compose -f infra/local/docker-compose.yml --profile tools run --rm wpcli direpair seed-demo",
+    "cms:logs": "docker compose -f infra/local/docker-compose.yml logs --tail 100 wordpress database",
+    "cms:stop": "docker compose -f infra/local/docker-compose.yml stop wordpress database",
+    "build:web": "corepack pnpm --dir apps/web build",
+    "build:vercel": "corepack pnpm --dir apps/web build:vercel",
+    "check:web": "corepack pnpm --dir apps/web check",
+    "test:web": "corepack pnpm --dir apps/web test",
+    "test:api": "cd apps/api && php artisan test --compact",
+    "format:api": "cd apps/api && vendor/bin/pint --format agent",
+    "audit:api": "php tmp/tools/composer.phar audit --working-dir=apps/api"
+  }
+}

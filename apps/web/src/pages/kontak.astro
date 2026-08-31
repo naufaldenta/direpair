@@ -1,0 +1,13 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCmsDataset } from '../lib/cms';
+
+const { settings } = await getCmsDataset();
+const whatsappHref = settings.whatsapp ? `https://wa.me/${settings.whatsapp.replace(/\D/g,'')}` : '';
+---
+<BaseLayout title="Kontak Direpair" description="Kanal kontak dan langkah memulai diagnosis repair Direpair.">
+  <section class="page-hero"><div class="narrow"><span class="route-code">CONTACT / VERIFIED</span><h1>Mulai dari booking terstruktur.</h1><p class="lede">Agar keluhan tidak hilang di chat, booking membuat nomor request dan tautan status. WhatsApp tetap dapat dipakai sebagai kanal komunikasi setelah request tercatat.</p></div></section>
+  <section class="section"><div class="container contact-grid"><article class="card"><span class="route-code">BOOKING / ENTRY</span><h2>Ceritakan perangkat.</h2><p>Isi kategori, brand/model, gejala, metode layanan, lalu kontak pada tahap terakhir.</p><a class="button" href={settings.booking_path}>Mulai booking</a></article><article class="card"><span class="route-code">CHANNEL / DIRECT</span><dl><div><dt>Telepon</dt><dd>{settings.phone || 'Belum dipublikasikan'}</dd></div><div><dt>WhatsApp</dt><dd>{settings.whatsapp ? <a href={whatsappHref} rel="noreferrer">{settings.whatsapp}</a> : 'Belum dipublikasikan'}</dd></div><div><dt>Email</dt><dd>{settings.email ? <a href={`mailto:${settings.email}`}>{settings.email}</a> : 'Belum dipublikasikan'}</dd></div><div><dt>Jam</dt><dd>{settings.opening_hours_summary || 'Dikonfirmasi oleh tim'}</dd></div></dl></article></div></section>
+</BaseLayout>
+<style>.page-hero{padding:78px 0;background:var(--route-navy);color:var(--paper)}.page-hero .route-code{color:var(--ticket-yellow)}.page-hero .lede{margin-top:22px;color:#b4c2cf}.contact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.contact-grid article{padding:clamp(28px,5vw,45px)}.contact-grid h2{margin-bottom:14px}.contact-grid p{color:var(--muted)}dl{margin:0}dl div{padding:15px 0;border-top:1px solid var(--line)}dt{color:var(--muted);font-family:var(--font-mono);font-size:.66rem;font-weight:800;text-transform:uppercase}dd{margin:4px 0 0;font-weight:750}dd a{color:var(--route-red)}@media(max-width:720px){.contact-grid{grid-template-columns:1fr}}</style>

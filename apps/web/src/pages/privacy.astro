@@ -1,0 +1,9 @@
+---
+export const prerender = true;
+import PolicyPage from '../components/PolicyPage.astro';
+import { getCmsDataset, isTrustedPublicContent } from '../lib/cms';
+
+const dataset = await getCmsDataset();
+const policy = dataset.policies.find((item)=>item.slug==='privacy' && isTrustedPublicContent(item));
+---
+<PolicyPage policy={policy} fallbackTitle="Kebijakan Privasi" fallbackDescription="Kebijakan privasi final Direpair belum dipublikasikan." />

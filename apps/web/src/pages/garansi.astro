@@ -1,0 +1,13 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCmsDataset, isTrustedPublicContent, metaNumber, metaString, metaStrings } from '../lib/cms';
+
+const dataset = await getCmsDataset();
+const warranties = dataset.warranties.filter(isTrustedPublicContent);
+---
+<BaseLayout title="Kebijakan Garansi Service · Direpair" description="Ringkasan masa, cakupan, dan pengecualian garansi service Direpair." noindex={warranties.length===0}>
+  <section class="page-hero"><div class="narrow"><span class="route-code">WARRANTY / REGISTERED</span><h1>Cakupan mengikuti pekerjaan sebenarnya.</h1><p class="lede">Kebijakan publik dikelola dari WordPress. Cakupan yang mengikat untuk satu repair disnapshot ke quotation atau invoice agar tidak berubah saat halaman ini diedit.</p></div></section>
+  <section class="section"><div class="narrow warranty-list">{warranties.length ? warranties.map((warranty)=><article class="card"><span class="route-code">{metaNumber(warranty,'warranty_duration_days') ? `${metaNumber(warranty,'warranty_duration_days')} hari` : 'Durasi mengikuti quotation'}</span><h2>{warranty.title}</h2><p class="lede">{metaString(warranty,'warranty_summary',warranty.excerpt)}</p><div class="prose" set:html={warranty.content}></div>{metaStrings(warranty,'warranty_exclusions').length>0&&<><h3>Pengecualian contoh/kebijakan</h3><ul>{metaStrings(warranty,'warranty_exclusions').map((item)=><li>{item}</li>)}</ul></>}</article>) : <article class="empty"><h2>Kebijakan final belum dipublikasikan.</h2><p>Production checkout harus menunggu review bisnis/legal. Garansi per pekerjaan tetap harus tercatat pada quotation atau invoice.</p></article>}</div></section>
+</BaseLayout>
+<style>.page-hero{padding:78px 0;background:var(--route-navy);color:var(--paper)}.page-hero .lede{margin-top:22px;color:#b8c8d2}.warranty-list{display:grid;gap:24px}.warranty-list article{padding:clamp(28px,5vw,50px)}.warranty-list .lede{margin:18px 0;color:var(--ink-soft)}.warranty-list h3{margin-top:30px}.empty{border-top:2px solid var(--orange);background:var(--warm)}</style>

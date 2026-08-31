@@ -1,0 +1,41 @@
+{
+  "title": "Kunci komposisi Service Line Atlas",
+  "question": "Arah visualnya sudah tetap. Pilih susunan layar yang harus saya reproduksi ke kode; ketiganya memakai identitas Service Line Atlas yang sama.",
+  "options": [
+    {
+      "id": "atlas-original",
+      "label": "Atlas Utama",
+      "lineage": "service route atlas lintas layar",
+      "thesis": "Headline dan seluruh jenis perangkat hidup di dalam satu peta servis edge-to-edge.",
+      "palette": ["#102A43", "#F7F4EA", "#D8432F", "#F0C44D", "#3B7C72"],
+      "materials": ["enamel signage", "route strips", "paper ticket", "station codes"],
+      "viewport": "Headline besar di kiri bawah; intake dan tahapan repair bergerak melintang serta bercabang di seluruh layar.",
+      "risk": "Komposisi paling padat dan memerlukan adaptasi mobile paling disiplin.",
+      "hero": ".impeccable/mocks/decision/direpair-service-line-atlas.png"
+    },
+    {
+      "id": "atlas-platform",
+      "label": "Service Platform",
+      "lineage": "platform wayfinding dan intake ticket",
+      "thesis": "Satu jalur horizontal membuat urutan repair dapat dipahami dalam sekali scan.",
+      "palette": ["#102A43", "#F7F4EA", "#D8432F", "#F0C44D", "#3B7C72"],
+      "materials": ["blank intake ticket", "platform marker", "route strip", "device branches"],
+      "viewport": "Tiket kosong di kiri, headline di atas jalur servis, CTA menempel pada stasiun Terima.",
+      "risk": "Paling jelas tetapi sedikit lebih dekat ke pola landing page yang familier.",
+      "hero": ".impeccable/mocks/service-line-atlas-platform.png"
+    },
+    {
+      "id": "atlas-interchange",
+      "label": "Repair Interchange",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "route interchange dan diagnostic convergence",
+      "thesis": "Beragam perangkat bertemu pada satu titik diagnosis lalu keluar melalui proses repair yang transparan.",
+      "palette": ["#102A43", "#F7F4EA", "#D8432F", "#F0C44D", "#3B7C72"],
+      "materials": ["interchange rings", "repair ticket", "route branches", "registration marks"],
+      "viewport": "Headline dominan di kiri, tiga jalur perangkat bertemu di simpul Diagnosis, CTA berada pada tiket yang menumpang di simpul.",
+      "risk": "Memerlukan SVG dan responsive choreography paling teliti agar simpul tidak kehilangan keterbacaan.",
+      "hero": ".impeccable/mocks/service-line-atlas-interchange.png"
+    }
+  ],
+  "steer": false
+}

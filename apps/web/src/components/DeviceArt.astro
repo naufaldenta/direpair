@@ -1,0 +1,23 @@
+---
+interface Props { kind?: string; label?: string; compact?: boolean; }
+const { kind = 'tools', label = 'Ilustrasi perangkat', compact = false } = Astro.props;
+---
+<div class:list={['device-art', { compact }]} role="img" aria-label={label}>
+  <span class="route-field" aria-hidden="true"></span>
+  {kind === 'earbuds' && <svg viewBox="0 0 260 220" aria-hidden="true"><path d="M68 52c-26 0-43 20-43 45 0 22 14 38 34 41v41c0 13 10 23 23 23s23-10 23-23V96c0-24-15-44-37-44Z"/><circle cx="68" cy="92" r="20"/><path d="M192 52c26 0 43 20 43 45 0 22-14 38-34 41v41c0 13-10 23-23 23s-23-10-23-23V96c0-24 15-44 37-44Z"/><circle cx="192" cy="92" r="20"/></svg>}
+  {kind === 'vacuum' && <svg viewBox="0 0 260 220" aria-hidden="true"><circle cx="128" cy="142" r="66"/><path d="M74 132c20-34 87-43 113-5M101 80l11-36h34l13 38M87 181h82"/><circle cx="128" cy="140" r="17"/></svg>}
+  {kind === 'bike' && <svg viewBox="0 0 280 220" aria-hidden="true"><circle cx="69" cy="161" r="43"/><circle cx="216" cy="161" r="43"/><path d="m69 161 48-74 46 74H69l30-52h82l35 52-22-91h-31M105 70h35"/><rect x="114" y="118" width="42" height="28" rx="8"/></svg>}
+  {kind === 'appliance' && <svg viewBox="0 0 260 220" aria-hidden="true"><rect x="54" y="30" width="152" height="174" rx="27"/><path d="M54 92h152M83 61h42M83 127h94M83 154h72"/><circle cx="171" cy="61" r="10"/></svg>}
+  {kind === 'tools' && <svg viewBox="0 0 260 220" aria-hidden="true"><path d="M171 33c-3 0-6 0-9 1l-33 33 20 20 34-33c1-3 1-6 1-9 0-4-1-8-2-11 25 6 43 29 43 56 0 32-26 58-58 58-8 0-15-2-22-4l-50 50c-13 13-34 13-47 0s-13-34 0-47l50-50c-2-7-4-14-4-22 0-32 26-58 58-58 7 0 14 1 19 3Z"/><circle cx="71" cy="171" r="11"/></svg>}
+</div>
+<style>
+  .device-art{position:relative;min-height:360px;display:grid;place-items:center;overflow:hidden;border:1px solid color-mix(in srgb,var(--paper) 24%,transparent);background:var(--route-navy);box-shadow:0 16px 38px rgba(1,29,56,.16)}
+  .device-art::before,.device-art::after{content:'';position:absolute;background:var(--ticket-yellow)}
+  .device-art::before{width:72%;height:5px;left:-8%;top:23%;transform:rotate(-10deg)}
+  .device-art::after{width:5px;height:82%;right:18%;bottom:-28%;transform:rotate(20deg)}
+  .route-field{position:absolute;inset:13%;border:2px dashed color-mix(in srgb,var(--paper) 38%,transparent);transform:rotate(-4deg)}
+  .route-field::before,.route-field::after{content:'';position:absolute;width:13px;height:13px;background:var(--route-red);border:3px solid var(--paper)}
+  .route-field::before{left:-8px;top:24%}.route-field::after{right:-8px;bottom:16%;background:var(--route-green)}
+  svg{position:relative;z-index:2;width:min(74%,340px);fill:var(--paper);stroke:var(--ink);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+  .compact{min-height:220px;box-shadow:0 10px 26px rgba(1,29,56,.13)}.compact svg{width:58%}
+</style>

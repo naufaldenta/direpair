@@ -1,0 +1,50 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCmsDataset } from '../lib/cms';
+import '../styles/global.css';
+
+interface Props { title: string; description: string; noindex?: boolean; image?: string; }
+const { title, description, noindex = false, image } = Astro.props;
+const { settings, source } = await getCmsDataset();
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const socialImage = image ? new URL(image, canonical).toString() : undefined;
+const originFrom = (value: string | undefined): string | null => { try { return value ? new URL(value).origin : null; } catch { return null; } };
+const connectionOrigins = new Set(["'self'", originFrom(Astro.url.origin), originFrom(import.meta.env.PUBLIC_API_BASE_URL), originFrom(import.meta.env.CMS_BASE_URL)].filter((origin): origin is string => Boolean(origin)));
+if (import.meta.env.DEV) connectionOrigins.add(Astro.url.origin.replace(/^http/, 'ws'));
+const cspParts = ["default-src 'self'", "base-uri 'self'", `connect-src ${Array.from(connectionOrigins).join(' ')}`, "font-src 'self' data:", "form-action 'self'", "img-src 'self' data: https:", "object-src 'none'", "script-src 'self' 'unsafe-inline'", "style-src 'self' 'unsafe-inline'"];
+if (import.meta.env.PROD) cspParts.push('upgrade-insecure-requests');
+const contentSecurityPolicy = cspParts.join('; ');
+const schema = !settings.demo_mode ? {
+  '@context': 'https://schema.org', '@type': 'Organization', name: settings.business_name, url: (Astro.site ?? Astro.url.origin).toString(),
+  ...(settings.phone ? { telephone: settings.phone } : {}), ...(settings.email ? { email: settings.email } : {}),
+} : null;
+const bodyMode = Astro.url.pathname === '/' ? 'page-home' : 'page-inner';
+---
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width" /><meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" /><meta name="theme-color" content="#F8F1E2" /><link rel="canonical" href={canonical} />
+    <title>{title}</title><meta name="description" content={description} /><meta name="referrer" content="strict-origin-when-cross-origin" /><meta http-equiv="Content-Security-Policy" content={contentSecurityPolicy} />
+    {(noindex || (source === 'fixture' && import.meta.env.PROD)) && <meta name="robots" content="noindex,nofollow" />}
+    <meta property="og:type" content="website" /><meta property="og:locale" content="id_ID" /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} />
+    {socialImage && <meta property="og:image" content={socialImage} />}<meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
+    {schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
+  </head>
+  <body class={bodyMode}>
+    <!--
+      THESIS: Direpair turns varied devices into one traceable repair interchange and refuses the split hero plus card grid.
+      OWN-WORLD: warm service paper, flat route colors, enamel linework, station rings/codes, punched tickets, compact corners, and grotesk type.
+      STORY: visitors see devices converge on diagnosis, understand quotation precedes repair, then start diagnosis or reopen private status.
+      FIRST VIEWPORT: boxed route nav; oversized headline; camera, console, and audio branches; central diagnosis ring; outgoing stages; yellow ticket CTA.
+      FORM: Service Line Atlas model pick, Repair Interchange composition, seed 22704d32.
+      FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+    -->
+    <a class="skip-link" href="#main">Lewati ke konten</a>
+    {source === 'fixture' && <div class="notice-demo">Mode fixture — semua harga, profil, lokasi, dan kasus pada tampilan ini adalah data demo.</div>}
+    <Header settings={settings} />
+    <main id="main"><slot /></main>
+    <Footer settings={settings} />
+  </body>
+</html>

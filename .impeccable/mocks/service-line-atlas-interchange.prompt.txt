@@ -1,0 +1,11 @@
+Use case: ui-mockup
+Asset type: high-fidelity desktop website first viewport, 16:10 landscape
+Reference image: the approved Service Line Atlas decision comp supplies the exact flat palette, wayfinding typography character, line weights, repair-route language, paper ticket material, and bold editorial density; do not copy its exact topology or content placement.
+Product: DIREPAIR, an Indonesian specialist repair service for non-mainstream electronics.
+Primary request: create compositional option three, “Repair Interchange”. Make the viewport one asymmetrical route interchange that explains how different device problems converge on a transparent repair process.
+Structure: a restrained navigation band at top; a very large headline in the upper-left two thirds; three device branches begin along the left and lower edge, cross through one oversized circular DIAGNOSIS interchange at center-right, then continue as one line to PENAWARAN, PERBAIKAN, SELESAI; a paper service ticket containing the primary CTA overlaps the interchange near the lower-right; the status-check link sits quietly on the top route.
+Text (verbatim): “DIREPAIR”, “Beda perangkat. Satu jalur yang bisa dilacak.”, “Mulai diagnosis”, “KAMERA”, “KONSOL”, “AUDIO”, “DIAGNOSIS”, “PENAWARAN”, “PERBAIKAN”, “SELESAI”, “Cek status repair”.
+Style/medium: realistic, polished, shippable product UI screenshot; Jakarta transit interchange diagrams fused with repair schematics and service tickets; visually ambitious but easy to scan, not concept art.
+Color palette: deep route blue #102A43, warm paper #F7F4EA, signal red #D8432F, ticket yellow #F0C44D, route green #3B7C72; flat colors only, no gradients.
+Materials: enamel route board, registration marks, printed repair ticket, station codes, crisp schematic linework, subtle paper grain.
+Constraints: accessible contrast; route causality and repair-service identity are immediate; one primary CTA; no split hero, no card grid, no fake ratings/testimonials/technician faces/claims, no neon, no watermark, no unrelated logos, no gibberish text, no gradients.

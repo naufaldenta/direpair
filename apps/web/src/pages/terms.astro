@@ -1,0 +1,9 @@
+---
+export const prerender = true;
+import PolicyPage from '../components/PolicyPage.astro';
+import { getCmsDataset, isTrustedPublicContent } from '../lib/cms';
+
+const dataset = await getCmsDataset();
+const policy = dataset.policies.find((item)=>item.slug==='terms' && isTrustedPublicContent(item));
+---
+<PolicyPage policy={policy} fallbackTitle="Syarat Layanan" fallbackDescription="Syarat layanan final Direpair belum dipublikasikan." />
