@@ -20,7 +20,7 @@
     "check:web": "corepack pnpm --dir apps/web check",
     "test:web": "corepack pnpm --dir apps/web test",
     "test:api": "cd apps/api && php artisan test --compact",
-    "format:api": "cd apps/api && vendor/bin/pint --format agent",
-    "audit:api": "php tmp/tools/composer.phar audit --working-dir=apps/api"
+    "format:api": "cd apps/api && vendor/bin/pint",
+    "audit:api": "composer audit --working-dir=apps/api"
   }
 }

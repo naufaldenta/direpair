@@ -25,7 +25,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.12.0
+          node-version-file: .node-version
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
@@ -44,7 +44,9 @@ jobs:
       - run: php apps/api/artisan key:generate
       - run: touch apps/api/database/database.sqlite
       - run: php apps/api/artisan migrate --seed --force
-      - run: php apps/api/vendor/bin/pint --test
-      - run: php apps/api/artisan test --compact
+      - run: vendor/bin/pint --test
+        working-directory: apps/api
+      - run: php artisan test --compact
+        working-directory: apps/api
       - run: composer audit --working-dir=apps/api
       - run: find apps/wordpress-plugin/direpair-content -name '*.php' -print0 | xargs -0 -n1 php -l

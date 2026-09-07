@@ -1,58 +1,127 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Direpair Operations API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel untuk booking servis, pelacakan status privat, persetujuan quotation, pembayaran, dan dashboard operasional.
 
-## About Laravel
+- Production: [api.direpair.id](https://api.direpair.id/api/v1/health)
+- Login operasional: [api.direpair.id/operations/login](https://api.direpair.id/operations/login)
+- Runtime: PHP **8.3**, Composer 2.
+- Dependency terkunci di [composer.lock](composer.lock).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Instalasi lokal
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Dari folder `apps/api`, pada instalasi baru:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```sh
+composer install --no-interaction --prefer-dist
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Salin `.env.example` menjadi `.env`, lalu:
 
-## Contributing
+```sh
+php artisan key:generate
+php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
+php artisan migrate --seed
+php artisan serve --host=127.0.0.1 --port=8000
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Jangan menimpa `.env` atau database yang sudah digunakan. Seeder menyediakan data demo untuk development dan dibatasi agar tidak dijalankan pada production.
 
-## Code of Conduct
+Frontend lokal memakai `http://localhost:4321`; samakan origin dengan `FRONTEND_URL` dan `CORS_ALLOWED_ORIGINS`. Login lokal menggunakan nilai demo dalam template environment, bukan kredensial production.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Endpoint utama
 
-## Security Vulnerabilities
+Base URL: `https://api.direpair.id/api/v1`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Method | Path | Fungsi |
+| --- | --- | --- |
+| GET | `/health` | Health check |
+| POST | `/service-requests` | Mengirim booking servis |
+| GET | `/status/{token}` | Melihat status melalui token privat |
+| POST | `/status/{token}/quotations/{quotationUuid}/decision` | Menyetujui/menolak quotation |
+| POST | `/payments/midtrans/webhook` | Callback pembayaran, divalidasi oleh backend |
 
-## License
+Definisi route ada di [routes/api.php](routes/api.php). Dashboard menggunakan session login di `/operations`; bukan `/admin` atau `/login`. Token status bersifat privat dan tidak boleh dicantumkan di dokumentasi publik.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Pengujian
+
+Dari `apps/api`:
+
+```sh
+php artisan test --compact
+composer validate --strict
+composer audit
+```
+
+Test memakai database SQLite in-memory dari `phpunit.xml`. Jangan menjalankan test dengan konfigurasi database production. Formatter: `vendor/bin/pint`.
+
+## Deployment cPanel
+
+Target:
+
+- Domain: `api.direpair.id`
+- Root: `/home/direpair/api.direpair.id`
+- WordPress pada akun hosting yang sama: `/home/direpair/cms.direpair.id`
+- Frontend: Vercel, `https://direpair.id`
+
+File [`.htaccess`](.htaccess) pada root aplikasi mengarahkan request ke `public/` serta melindungi file internal. Sertakan juga `public/.htaccess` saat upload. Jangan memindahkan `.env` atau source Laravel ke folder public.
+
+### Instalasi pertama
+
+1. Aktifkan PHP 8.3, Composer, dan ekstensi yang diminta Composer.
+2. Buat database `direpair_direpair_api`, user `direpair_apiuser`, dan berikan akses ke database tersebut melalui cPanel.
+3. Upload isi `apps/api` ke root API. Jangan upload `.env` lokal, database SQLite, `vendor` lokal, log, atau cache hasil laptop.
+4. Di Terminal cPanel:
+
+```sh
+cd /home/direpair/api.direpair.id
+bash deploy/setup-cpanel.sh
+```
+
+Script meminta password database dan hostname frontend. Masukkan **direpair.id** sebagai hostname frontend. Script membuat `.env` dari [`.env.cpanel.example`](.env.cpanel.example), menghasilkan key/token secara acak, memasang dependency production, menjalankan migration, membuat admin awal, dan mengoptimalkan konfigurasi.
+
+Simpan password admin yang ditampilkan secara privat, lalu ganti setelah login. Script menolak menimpa `.env` yang sudah ada. Tidak perlu membagikan password atau token melalui pesan.
+
+### Update deployment yang sudah berjalan
+
+Backup database dan source aktif terlebih dahulu. Upload source baru tanpa menimpa `.env`, `storage/`, dan data production, lalu:
+
+```sh
+cd /home/direpair/api.direpair.id
+composer install --no-dev --classmap-authoritative --no-interaction --prefer-dist
+php artisan optimize:clear
+php artisan migrate --force
+php artisan optimize
+```
+
+Jangan menjalankan `migrate:fresh`, `db:wipe`, atau seeder demo di production. Jangan menjalankan ulang `key:generate` pada update rutin karena data terenkripsi dan session menggunakan key yang sudah ada.
+
+### Konfigurasi production yang perlu dijaga
+
+```dotenv
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://api.direpair.id
+FRONTEND_URL=https://direpair.id
+PUBLIC_STATUS_URL=https://direpair.id/cek-status/
+CORS_ALLOWED_ORIGINS=https://direpair.id
+CMS_ALLOWED_ORIGIN=https://cms.direpair.id
+```
+
+Password database, `APP_KEY`, dan `STATUS_TOKEN_PEPPER` tetap berada di `.env` hosting. Jangan merotasi token pepper tanpa rencana karena link status yang sudah beredar bergantung padanya.
+
+Template memakai `PAYMENT_DRIVER=mock` dan `MAIL_MAILER=log`. Artinya pembayaran nyata dan pengiriman email belum diaktifkan hanya dengan menyalin template; konfigurasi provider serta uji sandbox diperlukan sebelum mengaktifkannya.
+
+Jika memakai scheduler, tambahkan cron cPanel setiap menit (sesuaikan executable PHP jika hosting memakai path lain):
+
+```sh
+cd /home/direpair/api.direpair.id && /usr/local/bin/php artisan schedule:run >> /dev/null 2>&1
+```
+
+Jika menambah job asynchronous pada database queue, siapkan worker sesuai fasilitas hosting. Vercel tidak menjalankan migration, scheduler, atau worker Laravel.
+
+## Pemeriksaan setelah upload
+
+1. `https://api.direpair.id/api/v1/health` mengembalikan status `ok`.
+2. `https://api.direpair.id/operations/login` membuka form login.
+3. File seperti `/.env` dan `/composer.json` tidak dapat diunduh dari web.
+4. Frontend dapat mengakses API dengan origin yang benar; lakukan booking uji hanya dengan persetujuan pengelola production.

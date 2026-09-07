@@ -1,99 +1,86 @@
-# Direpair Platform
+# Direpair
 
-Vertical slice untuk website Direpair berdasarkan requirement PDF: public website SEO-first di Astro, content control plane di WordPress, dan workflow repair privat di Laravel.
+Platform layanan perbaikan elektronik: website publik dengan Astro, pengelolaan konten dengan WordPress, dan operasional servis dengan Laravel.
 
-## Aplikasi
+## Repository dan production
 
-| Path | Fungsi |
-|---|---|
-| `apps/web` | Website publik Astro dan halaman status privat; target Git-connected Vercel |
-| `apps/api` | Booking, operasi repair, quotation, invoice, payment, timeline, dan dashboard staf Laravel |
-| `apps/wordpress-plugin/direpair-content` | Content model, settings, fixture, REST API, dan publish webhook WordPress |
+- Repository: [naufaldenta/direpair](https://github.com/naufaldenta/direpair) (private).
+- Branch production frontend: `main`.
+- Project Vercel: `direpair-web`.
+- Domain frontend: [direpair.id](https://direpair.id).
+- API dan dashboard operasional: [api.direpair.id](https://api.direpair.id/operations/login).
+- CMS: [cms.direpair.id/wp-admin/](https://cms.direpair.id/wp-admin/).
 
-Konten demo sengaja diberi label fixture dan tidak boleh terindeks di production. Nama teknisi, foto, lokasi, harga publik, FAQ, dan materi lain dikelola dari WordPress; data pelanggan dan transaksi tidak disimpan di WordPress.
+Lihat [catatan serah-terima](HANDOFF.md) untuk verifikasi versi production, cakupan source, dan status pembaruan konten otomatis. Akses repository private perlu diberikan kepada akun GitHub penerima; URL saja tidak memberikan akses.
 
-## Menjalankan lokal
+## Isi project
 
-Prasyarat: Node.js 22.12+, pnpm 11, PHP 8.3+, Composer, dan Docker Desktop bila ingin menjalankan WordPress lokal.
+| Lokasi | Isi |
+| --- | --- |
+| `apps/web/` | Astro, source TypeScript, halaman, komponen, styles, dan public assets |
+| `apps/api/` | Laravel, dashboard operasional, REST API, migration, dan test |
+| `apps/wordpress-plugin/direpair-content/` | Seluruh source plugin Direpair Content, admin forms, REST API, dan publish hook |
+| `infra/local/` | Docker Compose WordPress/MariaDB untuk development |
+| `infra/cpanel/` | Script pembuatan paket upload API dan plugin |
+| `.github/workflows/ci.yml` | Pemeriksaan frontend, backend, dependency, dan sintaks plugin |
 
-```powershell
-pnpm install
+WordPress core, database production, file upload CMS, `vendor/`, `node_modules/`, dan konfigurasi rahasia tidak disimpan di Git. Konten CMS dan database perlu backup terpisah untuk pemindahan server; source repository bukan backup data production.
 
-Copy-Item apps/api/.env.example apps/api/.env
-Copy-Item apps/web/.env.example apps/web/.env
-php apps/api/artisan key:generate
-New-Item -ItemType File -Force apps/api/database/database.sqlite
-php apps/api/artisan migrate --seed
+## Prasyarat
+
+- Node.js **24.14.1**, dicatat di [`.node-version`](.node-version); Vercel menggunakan lini Node **24.x**.
+- pnpm **11.19.0**, dicatat di `package.json#packageManager`.
+- PHP **8.3** dan Composer 2 untuk API.
+- Docker Desktop hanya diperlukan jika menjalankan CMS lokal dengan Compose.
+
+Dependency frontend dikunci oleh [`pnpm-lock.yaml`](pnpm-lock.yaml), dependency backend oleh [`composer.lock`](apps/api/composer.lock). Jalankan instalasi dari root repository agar workspace dan lockfile yang sama digunakan.
+
+## Menjalankan frontend
+
+```sh
+git clone https://github.com/naufaldenta/direpair.git
+cd direpair
+corepack pnpm install --frozen-lockfile
+corepack pnpm dev:web
 ```
 
-Setup WordPress berikut hanya perlu dijalankan sekali setelah volume Docker dibuat:
+Buka [localhost:4321](http://localhost:4321). Untuk konfigurasi lokal, salin `apps/web/.env.example` menjadi `apps/web/.env`. Data fixture bertanda demo tersedia jika CMS lokal belum berjalan. Pengiriman booking memerlukan API lokal yang aktif.
 
-```powershell
-pnpm cms:up
-docker compose -f infra/local/docker-compose.yml --profile tools run --rm wpcli core install --url=http://localhost:8080 --title="Direpair Local" --admin_user=admin --admin_password=direpair-local-only --admin_email=admin@direpair.test --skip-email
-docker compose -f infra/local/docker-compose.yml --profile tools run --rm wpcli plugin activate direpair-content
-docker compose -f infra/local/docker-compose.yml --profile tools run --rm wpcli rewrite structure '/%postname%/' --hard
-pnpm cms:seed
+```sh
+corepack pnpm status:web
+corepack pnpm stop:web
 ```
 
-Untuk pemakaian harian, buka dua terminal dari root proyek:
+Perintah menggunakan `corepack pnpm` langsung; `corepack enable` tidak diperlukan jika Windows membatasi penulisan shim ke folder instalasi Node.
 
-```powershell
-# Terminal 1: CMS + database, lalu frontend Astro di background
-pnpm cms:up
-pnpm dev:web
+## Pemeriksaan dan build
 
-# Terminal 2: backend operasional Laravel
-pnpm dev:api
+```sh
+corepack pnpm check:web
+corepack pnpm build:vercel
 ```
 
-## URL dan fungsi lokal
+Build production harus menggunakan variabel dalam [`apps/web/.env.production.example`](apps/web/.env.production.example). Di Vercel, isi variabel melalui Project Settings. Untuk build production di laptop, salin template tersebut menjadi `apps/web/.env.production`.
 
-| Komponen | URL | Fungsi |
-|---|---|---|
-| Frontend (FE) | `http://localhost:4321` | Website publik Astro yang dibaca pelanggan |
-| Form booking | `http://localhost:4321/booking/` | Membuat repair request ke Laravel |
-| Status fixture | `http://localhost:4321/cek-status/demo-status-token-direpair-local-123456789` | Contoh quotation dan timeline privat |
-| Backend API | `http://localhost:8000/api/v1/health` | Health check API Laravel |
-| Backend staf | `http://localhost:8000/operations/login` | Kelola request, diagnosis, quotation, dan payment |
-| CMS WordPress | `http://localhost:8080/wp-admin/` | Ubah layanan, harga, foto, teknisi, lokasi, FAQ, dan kebijakan |
-| CMS REST | `http://localhost:8080/wp-json/direpair/v1/health` | Health check konten untuk Astro |
+Halaman konten dibuat saat build; URL status bertoken menggunakan adapter Vercel. Hasil build Vercel bukan paket static hosting cPanel biasa.
 
-Kredensial development lokal:
+Untuk API yang dependency dan environment lokalnya sudah disiapkan:
 
-| Panel | User | Password |
-|---|---|---|
-| WordPress | `admin` | `direpair-local-only` |
-| Backend staf | `admin@direpair.test` | `direpair-local-only` |
-
-Nilai tersebut hanya fixture lokal. Jangan gunakan untuk staging atau production.
-
-Command status dan stop:
-
-```powershell
-pnpm cms:status
-pnpm status:web
-
-pnpm stop:web
-pnpm cms:stop
-```
-
-Backend Laravel dihentikan dengan `Ctrl+C` pada Terminal 2 yang menjalankan `pnpm dev:api`.
-
-Pembagian tanggung jawabnya:
-
-- WordPress hanya menyimpan konten publik yang dapat diedit klien.
-- Laravel menyimpan data pelanggan, repair, quotation, invoice, dan payment.
-- Astro membaca WordPress untuk konten, lalu mengirim booking/status ke Laravel.
-
-## Pemeriksaan kualitas
-
-```powershell
-pnpm check:web
-pnpm build:web
-cd apps/api && vendor/bin/pint --test
+```sh
 corepack pnpm test:api
-php tmp/tools/composer.phar audit --working-dir=apps/api
+corepack pnpm audit:api
 ```
 
-Tutorial final Vercel + cPanel yang siap diikuti ada di [docs/deployment-cpanel.md](docs/deployment-cpanel.md). Ringkasan production gate ada di [docs/deployment-runbook.md](docs/deployment-runbook.md). Keputusan workflow bisnis ada di [docs/repair-workflow.md](docs/repair-workflow.md). Pekerjaan yang memang masih P1/P2 atau memerlukan akun/data klien dicatat transparan di [docs/remaining-roadmap.md](docs/remaining-roadmap.md).
+`test:web` saat ini menjalankan pemeriksaan Astro/TypeScript, bukan browser end-to-end test.
+
+## Panduan per aplikasi
+
+- [Frontend: environment, build, integrasi, dan deploy Vercel](apps/web/README.md)
+- [Laravel: setup lokal, endpoint, dan deploy cPanel](apps/api/README.md)
+- [Direpair Content: instalasi, endpoint WordPress, dan deploy hook](apps/wordpress-plugin/direpair-content/README.md)
+
+## Konfigurasi dan keamanan
+
+File `.env.example` hanya berisi nama variabel, nilai publik, placeholder, dan nilai demo lokal. Jangan mengunggah `.env`, password database, application key, token pembayaran, database dump, atau URL Deploy Hook ke repository maupun WhatsApp. Konfigurasi production tetap berada di Vercel/cPanel/WordPress.
+
+Push ke `main` memicu deployment frontend melalui integrasi Git Vercel. Perubahan Laravel dan plugin WordPress perlu diunggah terpisah ke cPanel; tidak ikut dideploy oleh Vercel.

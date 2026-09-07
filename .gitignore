@@ -24,3 +24,41 @@ apps/api/storage/*.key
 .dev.vars
 
 release/cpanel/
+
+# Local tooling and workspace notes
+.agent/
+.agents/
+.impeccable/
+.claude/
+.codex/
+.amp/
+.cursor/
+.ai/
+.planning/
+.mcp.json
+.cursorrules
+.cursorignore
+.windsurfrules
+[Aa][Gg][Ee][Nn][Tt].md
+[Aa][Gg][Ee][Nn][Tt][Ss].md
+CLAUDE.md
+GEMINI.md
+SKILL.md
+skills-lock.json
+boost.json
+findings.md
+finding.md
+progress.md
+task_plan.md
+/DESIGN.md
+/PRODUCT.md
+/docs/
+/Blueprint*.pdf
+.github/copilot-instructions.md
+.github/agents/
+.github/prompts/
+.github/instructions/
+
+# Generated release archives
+/release/
+/direpair-*.zip

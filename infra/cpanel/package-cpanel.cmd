@@ -11,7 +11,7 @@ if exist "release\cpanel\direpair-content.zip" del /q "release\cpanel\direpair-c
 if exist "release\cpanel\direpair-frontend.zip" del /q "release\cpanel\direpair-frontend.zip"
 
 echo [1/2] Packaging Laravel API...
-tar.exe -a -c -f "release\cpanel\direpair-api.zip" --exclude=database/database.sqlite --exclude=bootstrap/cache/*.php -C "apps\api" .env.cpanel.example .htaccess app artisan bootstrap composer.json composer.lock config database deploy public resources routes
+tar.exe -a -c -f "release\cpanel\direpair-api.zip" --exclude=database/database.sqlite --exclude=bootstrap/cache/*.php -C "apps\api" .env.cpanel.example .htaccess README.md app artisan bootstrap composer.json composer.lock config database deploy public resources routes
 if errorlevel 1 exit /b 1
 
 echo [2/2] Packaging WordPress content plugin...
